@@ -1,0 +1,43 @@
+version: '3.6'
+
+services:
+    mysql:
+        image: 'mysql:latest'
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_RANDOM_ROOT_PASSWORD=yes
+
+    web:
+        build: docker/php
+        depends_on:
+            - mysql
+        volumes:
+            - .:/var/www/project:cached
+        ports:
+            - 8080:80
+
+    nginx:
+        build: docker/nginx
+        volumes:
+            - ./:/usr/share/nginx/html
+
+    composer:
+        image: composer:1.9.0
+        command: install
+        depends_on:
+            - web
+        volumes:
+            - .:/app
+
+    pma:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            - PMA_HOST=mysql
+        ports:
+            - 8081:80
+        depends_on:
+            - mysql
