@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
     mysql:
-        image: 'mysql:latest'
+        image: mysql:latest
         command: --default-authentication-plugin=mysql_native_password
         restart: always
         environment:
@@ -13,17 +13,15 @@ services:
 
     web:
         build: docker/php
-        depends_on:
-            - mysql
         volumes:
-            - .:/var/www/project:cached
-        ports:
-            - 8080:80
-
+            - ./:/var/www/project:cached
+    
     nginx:
         build: docker/nginx
         volumes:
             - ./:/usr/share/nginx/html
+        ports:
+            - 8080:8080
 
     composer:
         image: composer:1.9.0
