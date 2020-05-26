@@ -7,3 +7,5 @@ build: ##@Docker run & install services dependencies
 run: ##@Docker run services dependencies
 	docker-compose up -d
 
+connect: ##@Docker connect to app container
+	docker-compose exec php-fpm bash
