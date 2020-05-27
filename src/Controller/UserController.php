@@ -41,25 +41,30 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/register", name="register")
+     * @Route("/register", name="app_register")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return RedirectResponse|Response
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        // Redirect if an User is log
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         // Create User and get form data
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             // Encode User password
             $passwordEncoder = $passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($passwordEncoder);
 
-            // Persist User in database
+            // Add User in database
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
@@ -88,6 +93,11 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
+        // Verify User
+        if ($this->verifyUser($user)) {
+            return $this->redirectToRoute('app_home');
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Update User in database
@@ -108,14 +118,18 @@ class UserController extends AbstractController
 
     /**
      * @Route("/remove_user/{id}", name="remove_user")
-     * @param Request $request
      * @param int $id
      * @return RedirectResponse
      */
-    public function remove(Request $request, int $id)
+    public function remove(int $id)
     {
         // Get User
         $user = $this->userRepository->find($id);
+
+        // Verify User
+        if ($this->verifyUser($user)) {
+            return $this->redirectToRoute('app_home');
+        }
 
         // Remove User in database
         $this->entityManager->remove($user);
@@ -125,5 +139,24 @@ class UserController extends AbstractController
         $this->addFlash('notification', 'L’utilisateur a bien été supprimé.');
 
         return $this->redirectToRoute('list_users');
+    }
+
+    /**
+     * Verify User
+     * @param User $user
+     * @return bool
+     */
+    public function verifyUser(User $user)
+    {
+        $result = false;
+
+        if (
+            $this->getUser()->getUsername() === $user->getUsername() ||
+            in_array("ROLE_ADMIN", $this->getUser()->getRoles())
+        ) {
+            $result = true;
+        }
+
+        return $result;
     }
 }
