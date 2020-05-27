@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -73,10 +75,16 @@ class User implements UserInterface
      */
     private $roles;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Team::class, mappedBy="users")
+     */
+    private $teams;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
         $this->createdAt = new \DateTime();
+        $this->teams = new ArrayCollection();
     }
 
     /**
@@ -182,18 +190,6 @@ class User implements UserInterface
     }
 
     /**
-     * Set create date User
-     * @param \DateTimeInterface $createdAt
-     * @return $this
-     */
-    public function setCreatedAt(\DateTimeInterface $createdAt): ?self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
      * Get roles User
      * @return string[]
      */
@@ -230,6 +226,45 @@ class User implements UserInterface
     public function getUsername()
     {
         return $this->lastName . " " . $this->firstName;
+    }
+
+    /**
+     * Get Team User
+     * @return Collection|Team[]
+     */
+    public function getTeams(): Collection
+    {
+        return $this->teams;
+    }
+
+    /**
+     * Add Team User
+     * @param Team $team
+     * @return $this
+     */
+    public function addTeam(Team $team): self
+    {
+        if (!$this->teams->contains($team)) {
+            $this->teams[] = $team;
+            $team->addUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove Team User
+     * @param Team $team
+     * @return $this
+     */
+    public function removeTeam(Team $team): self
+    {
+        if ($this->teams->contains($team)) {
+            $this->teams->removeElement($team);
+            $team->removeUser($this);
+        }
+
+        return $this;
     }
 
     public function getSalt()
