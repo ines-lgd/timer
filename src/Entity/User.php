@@ -10,65 +10,66 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={'email'}, message='Un compte existe déjà avec cette adresse e-mail')
+ * @UniqueEntity(fields={"email"}, message="Un compte existe déjà avec cette adresse e-mail.")
+ * @UniqueEntity(fields={"pseudo"}, message="Un compte existe déjà avec ce pseudo.")
  */
 class User implements UserInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type='integer')
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type='string', length=255)
-     * @Assert\NotBlank(message='Le nom ne peut être vide')
-     * @Assert\Length(min=2, minMessage='le nom est trop court',
-     *     max=100, maxMessage='le nom est trop long')
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le nom ne peut être vide")
+     * @Assert\Length(min=2, minMessage="le nom est trop court",
+     *     max=100, maxMessage="le nom est trop long")
      */
     private $lastName;
 
     /**
-     * @ORM\Column(type='string', length=255)
-     * @Assert\NotBlank(message='Le prénom ne peut être vide')
-     * @Assert\Length(min=2, minMessage='le prénom est trop court',
-     *     max=100, maxMessage='le prénom est trop long')
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le prénom ne peut être vide")
+     * @Assert\Length(min=2, minMessage="le prénom est trop court",
+     *     max=100, maxMessage="le prénom est trop long")
      */
     private $firstName;
 
     /**
-     * @Assert\NotBlank(message='Le pseudo ne peut être vide')
-     * @Assert\Length(min=2, minMessage='le pseudo est trop court',
-     *     max=100, maxMessage='le pseudo est trop long')
-     * @ORM\Column(type='string', length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="Le pseudo ne peut être vide")
+     * @Assert\Length(min=2, minMessage="le pseudo est trop court",
+     *     max=100, maxMessage="le pseudo est trop long")
      */
     private $pseudo;
 
     /**
-     * @ORM\Column(type='string', length=255, unique=true)
-     * @Assert\NotBlank(message='L’adresse e-mail ne peut être vide')
-     * @Assert\Email(message='L’adresse e-mail doit être valide')
-     * @Assert\Length(min=5, minMessage='L’adresse e-mail est trop court',
-     *     max=255, maxMessage='L’adresse e-mail est trop long')
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="L’adresse e-mail ne peut être vide")
+     * @Assert\Email(message="L’adresse e-mail doit être valide")
+     * @Assert\Length(min=5, minMessage="L’adresse e-mail est trop court",
+     *     max=255, maxMessage="L’adresse e-mail est trop long")
      */
     private $email;
 
     /**
-     * @ORM\Column(type='string', length=255)
-     * @Assert\NotBlank(message='Le mot de passe ne peut être vide')
-     * @Assert\Length(min=5, minMessage='Le mot de passe est trop court',
-     *     max=255, maxMessage='Le mot de passe est trop long')
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le mot de passe ne peut être vide")
+     * @Assert\Length(min=5, minMessage="Le mot de passe est trop court",
+     *     max=255, maxMessage="Le mot de passe est trop long")
      */
     private $password;
 
     /**
-     * @ORM\Column(type='datetime')
+     * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @ORM\Column(type='simple_array')
+     * @ORM\Column(type="simple_array")
      */
     private $roles;
 
@@ -91,7 +92,7 @@ class User implements UserInterface
      * Get last name User
      * @return string
      */
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -101,7 +102,7 @@ class User implements UserInterface
      * @param string $lastName
      * @return $this
      */
-    public function setLastName(string $lastName): self
+    public function setLastName(string $lastName): ?self
     {
         $this->lastName = $lastName;
 
@@ -112,7 +113,7 @@ class User implements UserInterface
      * Get first name User
      * @return string
      */
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -122,7 +123,7 @@ class User implements UserInterface
      * @param string $firstName
      * @return $this
      */
-    public function setFirstName(string $firstName): self
+    public function setFirstName(string $firstName): ?self
     {
         $this->firstName = $firstName;
 
@@ -133,7 +134,7 @@ class User implements UserInterface
      * Get pseudo User
      * @return string
      */
-    public function getPseudo(): string
+    public function getPseudo(): ?string
     {
         return $this->pseudo;
     }
@@ -143,7 +144,7 @@ class User implements UserInterface
      * @param string $pseudo
      * @return $this
      */
-    public function setPseudo(string $pseudo): self
+    public function setPseudo(string $pseudo): ?self
     {
         $this->pseudo = $pseudo;
 
@@ -154,7 +155,7 @@ class User implements UserInterface
      * Get email User
      * @return string
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -164,7 +165,7 @@ class User implements UserInterface
      * @param string $email
      * @return $this
      */
-    public function setEmail(string $email): self
+    public function setEmail(string $email): ?self
     {
         $this->email = $email;
 
@@ -185,7 +186,7 @@ class User implements UserInterface
      * @param \DateTimeInterface $createdAt
      * @return $this
      */
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): ?self
     {
         $this->createdAt = $createdAt;
 
@@ -211,12 +212,24 @@ class User implements UserInterface
     }
 
     /**
+     * Set password User
+     * @param string $password
+     * @return $this
+     */
+    public function setPassword(string $password): ?self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
      * Get last name and first name User
      * @return string
      */
     public function getUsername()
     {
-        return $this->lastName . ' ' . $this->firstName;
+        return $this->lastName . " " . $this->firstName;
     }
 
     public function getSalt()

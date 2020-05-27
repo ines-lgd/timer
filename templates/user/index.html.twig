@@ -11,8 +11,11 @@
 <div class="example-wrapper">
     {% for user in users %}
         Nom et Prénom : {{ user.username }} <br />
-        E-mail : {{ user.attack }} <br />
-        Date de création: {{ user.createAt }} <br />
+        Pseudo : {{ user.pseudo }} <br />
+        E-mail : {{ user.email }} <br />
+        Date de création: {{ user.createdAt | date('d M Y') }} <br />
+        <a href="{{ path("set_user", {id: user.id}) }}">Modifier</a>
+        <a style="color: red" href="{{ path("remove_user", {id: user.id}) }}">Supprimer</a>
         <br />
         <br />
         <br />

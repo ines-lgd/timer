@@ -1,5 +1,7 @@
 
 ###> symfony/framework-bundle ###
+/src/Migrations/Version*.php
+/volumes
 /.idea
 /.env
 /.env.test
