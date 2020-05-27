@@ -10,6 +10,8 @@ services:
             - MYSQL_USER=${MYSQL_USER}
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
             - MYSQL_RANDOM_ROOT_PASSWORD=yes
+        volumes:
+            - ./volumes/db-data:/var/lib/mysql
 
     php-fpm:
         build:
