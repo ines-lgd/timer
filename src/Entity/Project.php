@@ -61,11 +61,6 @@ class Project
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $leader;
-
-    public function __construct()
-    {
-        $this->createdAt = new \DateTime();
-    }
     
     /**
      * @ORM\Column(type="datetime", nullable=true)
