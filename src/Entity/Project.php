@@ -78,7 +78,6 @@ class Project
     {
         return $this->name;
     }
-
     /**
      * Set name Project
      * @param string $name
