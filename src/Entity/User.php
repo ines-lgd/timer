@@ -97,6 +97,15 @@ class User implements UserInterface
     }
 
     /**
+     * Get Last name and first name User
+     * @return string|null
+     */
+    public function getName(): ?string
+    {
+        return $this->lastName . ' ' . $this->firstName;
+    }
+
+    /**
      * Get last name User
      * @return string
      */
@@ -220,12 +229,12 @@ class User implements UserInterface
     }
 
     /**
-     * Get last name and first name User
+     * Get username
      * @return string
      */
     public function getUsername()
     {
-        return $this->lastName . " " . $this->firstName;
+        return $this->pseudo;
     }
 
     /**

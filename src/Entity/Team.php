@@ -5,11 +5,13 @@ namespace App\Entity;
 use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TeamRepository::class)
+ * @UniqueEntity(fields={"name"}, message="Ce nom de groupe existe déjà.")
  * @ORM\Table(name="`team`")
  */
 class Team
@@ -22,7 +24,7 @@ class Team
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(message="Le nom du groupe ne peut être vide")
      * @Assert\Length(min=2, minMessage="le nom du groupe est trop court",
      *     max=100, maxMessage="le nom du groupe est trop long")
@@ -38,6 +40,11 @@ class Team
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $createdBy;
 
     public function __construct()
     {
@@ -121,4 +128,24 @@ class Team
         return $this->createdAt;
     }
 
+    /**
+     * Get creator
+     * @return User
+     */
+    public function getCreatedBy(): User
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set creator
+     * @param User $creator
+     * @return Team
+     */
+    public function setCreatedBy(User $creator): self
+    {
+         $this->createdBy = $creator;
+
+         return $this;
+    }
 }

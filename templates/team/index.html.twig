@@ -9,12 +9,23 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1> Teams ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/usr/share/nginx/html/src/Controller/TeamController.php'|file_link(0) }}">src/Controller/TeamController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/usr/share/nginx/html/templates/team/index.html.twig'|file_link(0) }}">templates/team/index.html.twig</a></code></li>
-    </ul>
+    {% for team in teams %}
+        <a href="{{ path('show_team', {id: team.id}) }}">{{ team.name }}</a> <br />
+        Membres :
+        <br />
+        {% for user in team.users %}
+            - {{ user.name }} : ( {{ user.pseudo}} )<br />
+        {% endfor %}
+        Date de création: {{ team.createdAt | date('d M Y') }} <br />
+        Crée par : {{ team.createdBy.pseudo }} <br />
+
+        <!--<a href="{{ path('update_team', {id: team.id}) }}">Modifier</a>
+        <a style="color: red" href="{{ path('remove_team', {id: team.id}) }}">Supprimer</a>-->
+        <br />
+        <br />
+        <br />
+    {% endfor %}
 </div>
 {% endblock %}
