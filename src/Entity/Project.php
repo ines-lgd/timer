@@ -46,11 +46,6 @@ class Project
      */
     private $createdAt;
 
-    public function __construct()
-    {
-        $this->createdAt = new \DateTime();
-    }
-
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      */
@@ -61,6 +56,11 @@ class Project
      */
     private $leader;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+    
     /**
      * Get id Project
      * @return int|null
