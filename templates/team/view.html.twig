@@ -22,7 +22,11 @@
         <ul>
             {% for user in team.users %}
                 <li>
-                    {{ user.name }} - {{ user.pseudo }}
+                    {% if team.createdBy.id is same as (user.id)  %}
+                        - {{ user.name }} : {{ user.pseudo}} (admin)<br />
+                    {% else %}
+                        - {{ user.name }} : {{ user.pseudo}}<br />
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>

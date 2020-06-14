@@ -26,6 +26,18 @@
     <div class="form-error">{{ form_errors(form.name) }}</div>
     <br />
     <br />
+    {% if team is defined %}
+        {% for user in team.users %}
+            {% if team.createdBy.id is same as (user.id) %}
+                - {{ user.name }} : {{ user.pseudo}} (admin)<br />
+            {% else %}
+                - {{ user.name }} : {{ user.pseudo}}
+                <a style="color: red" href="{{ path('delete_user_team', {team_id: team.id, user_id: user.id}) }}">supprimer</a>
+                <br />
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <br />
     <br />
 
     {{ form_widget(form.submit, { 'label': 'Valider', 'attr': {'class': 'btn-sub'} }) }}

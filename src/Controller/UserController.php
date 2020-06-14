@@ -29,6 +29,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users", name="list_users")
+     * @return Response
      */
     public function all()
     {
@@ -71,7 +72,7 @@ class UserController extends AbstractController
             // Add message flash
             $this->addFlash('notification', 'Inscription effectué.');
 
-            return $this->redirectToRoute('list_users');
+            return $this->redirectToRoute('app_home');
         }
 
         // View form User
@@ -88,15 +89,21 @@ class UserController extends AbstractController
      */
     public function update(Request $request, int $id)
     {
-        // Get User and get form data
+        // Get User
         $user = $this->userRepository->find($id);
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
 
-        // Verify User
-        if ($this->verifyUser($user)) {
+        // Check if User is User logged
+        if ($user->getUsername() !== $this->getUser()->getUsername()) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous ne pouvez pas modifier cet utlisateur.');
+
             return $this->redirectToRoute('app_home');
         }
+
+        // Get form data
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -126,8 +133,12 @@ class UserController extends AbstractController
         // Get User
         $user = $this->userRepository->find($id);
 
-        // Verify User
-        if ($this->verifyUser($user)) {
+        // Check if User is User logged
+        if ($user->getUsername() !== $this->getUser()->getUsername()) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous ne pouvez pas supprimer ce groupe.');
+
             return $this->redirectToRoute('app_home');
         }
 
@@ -138,25 +149,6 @@ class UserController extends AbstractController
         // Add message flash
         $this->addFlash('notification', 'L’utilisateur a bien été supprimé.');
 
-        return $this->redirectToRoute('list_users');
-    }
-
-    /**
-     * Verify User
-     * @param User $user
-     * @return bool
-     */
-    public function verifyUser(User $user)
-    {
-        $result = false;
-
-        if (
-            $this->getUser()->getUsername() === $user->getUsername() ||
-            in_array("ROLE_ADMIN", $this->getUser()->getRoles())
-        ) {
-            $result = true;
-        }
-
-        return $result;
+        return $this->redirectToRoute('app_logout');
     }
 }

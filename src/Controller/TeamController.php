@@ -39,7 +39,7 @@ class TeamController extends AbstractController
      */
     public function list()
     {
-        // Get User log
+        // Get User logged
         $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
 
         return $this->render('team/index.html.twig', [
@@ -47,9 +47,8 @@ class TeamController extends AbstractController
         ]);
     }
 
-
     /**
-     * @Route("/team/add", name="add_team")* @param Request $request
+     * @Route("/team/add", name="add_team")
      * @param Request $request
      * @return Response
      */
@@ -97,19 +96,26 @@ class TeamController extends AbstractController
      */
     public function update(Request $request, int $id)
     {
-        // Get Team and get form data
+        // Get Team and User logged
         $team = $this->teamRepository->find($id);
-        $creator = $team->getCreatedBy()->getUsername();
+        $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
+
+        // Check if User is Creator Team
+        if ($team->getCreatedBy()->getId() !== $user->getId()) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous ne pouvez pas modifier ce groupe.');
+
+            return $this->redirectToRoute('show_team', ['id' => $team->getId()]);
+        }
+
+        // Get form data
         $form = $this->createForm(UpdateTeamType::class, $team);
         $form->handleRequest($request);
 
-        // Check if User is Admin or Creator Team
-        if (!$this->isGranted('ROLE_ADMIN') || $creator !== $this->getUser()->getUsername()) {
-            $this->redirectToRoute('app_home');
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // Update Team in database
             $this->entityManager->persist($team);
             $this->entityManager->flush();
 
@@ -122,7 +128,8 @@ class TeamController extends AbstractController
         }
 
         return $this->render('team/form.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'team' => $team
         ]);
     }
 
@@ -136,11 +143,14 @@ class TeamController extends AbstractController
     {
         // Get Team and Creator
         $team = $this->teamRepository->find($id);
-        $creator = $team->getCreatedBy()->getUsername();
 
-        // Check if User is Admin or Creator Team
-        if (!$this->isGranted("ROLE_ADMIN") || $creator !== $this->getUser()->getUsername()) {
-            $this->redirectToRoute('app_home');
+        // Check if User is Creator Team
+        if ($team->getCreatedBy()->getUsername() !== $this->getUser()->getUsername()) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous ne pouvez pas supprimer ce groupe.');
+
+            return $this->redirectToRoute('list_teams');
         }
 
         // Remove User in database
@@ -150,7 +160,7 @@ class TeamController extends AbstractController
         // Add message flash
         $this->addFlash('notification', 'Le groupe a bien été supprimé.');
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('list_teams');
     }
 
     /**

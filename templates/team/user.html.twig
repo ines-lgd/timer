@@ -21,9 +21,14 @@
         {{ form_start(form) }}
 
         {{ form_label(form.user, 'Pseudo de l’utilisateur', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.user, {'attr': {'id': 'user_field', 'class': 'form-input'}}) }}
+        {{ form_widget(form.user, {'attr': {'id': 'user_field', 'class': 'form-input', 'list': 'user_list'}}) }}
         <div id="form-error-user" class="form-error">{{ form_errors(form.user) }}</div>
 
+        <datalist id="user_list">
+            {% for user in users %}
+                <option value="{{ user.pseudo }}">
+            {% endfor %}
+        </datalist>
         <br />
         <br />
         <br />
@@ -31,7 +36,11 @@
         <ul>
             {% for user in team.users %}
                 <li>
-                    {{ user.pseudo }} - < {{ user.email }} >
+                    {% if team.createdBy.id is same as (user.id) %}
+                        - {{ user.name }} : {{ user.pseudo}} (admin)<br />
+                    {% else %}
+                        - {{ user.name }} : {{ user.pseudo}}<br />
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>

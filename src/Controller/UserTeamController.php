@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Team;
 use App\Form\UserTeamType;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,8 +38,11 @@ class UserTeamController extends AbstractController
      */
     public function addUser(Request $request, int $id)
     {
-        // Get Team
+        // Get Team and Users
         $team = $this->teamRepository->find($id);
+        $users = $this->getUsers($team);
+
+        // Get form data
         $form = $this->createForm(UserTeamType::class);
         $form->handleRequest($request);
 
@@ -56,7 +61,7 @@ class UserTeamController extends AbstractController
 
                 if (in_array($user, $team->getUsers()->toArray())) {
 
-                    // Set message error if user is all ready in team
+                    // Set message error if user is already in team
                     $form->get('user')->addError(new FormError('Cet utilisateur fait déjà partie de ce groupe.'));
                 }
                 else {
@@ -75,7 +80,64 @@ class UserTeamController extends AbstractController
 
         return $this->render('team/user.html.twig', [
             'team' => $team,
+            'users' => $users,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/team/delete_user/{team_id}/{user_id}", name="delete_user_team")
+     * @param int $team_id
+     * @param int $user_id
+     * @return RedirectResponse
+     */
+    public function removeUser(int $team_id, int $user_id)
+    {
+        // Get Team, User and User logged
+        $team = $this->teamRepository->find($team_id);
+        $user = $this->userRepository->find($user_id);
+        $user_logged = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
+
+        // Check if User logged is Creator and if User removed is Creator
+        if (
+            $team->getCreatedBy()->getId() !== $user_logged->getId() ||
+            $team->getCreatedBy()->getId() === $user->getId()
+        ) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous ne pouvez pas supprimer d’utilisateur pour ce groupe.');
+
+            return $this->redirectToRoute('show_team', [
+                'id' => $team->getId()
+            ]);
+        }
+
+        // Remove User in Team and Update Team in database
+        $team->removeUser($user);
+        $this->entityManager->persist($team);
+        $this->entityManager->flush();
+
+        // Add message flash
+        $this->addFlash('notification', $user->getName() . ' a été supprimer du groupe.');
+
+        return $this->redirectToRoute('show_team', [
+            'id' => $team_id
+        ]);
+    }
+
+    public function getUsers(Team $team) {
+
+        // Get all Users
+        $users = $this->userRepository->findAll();
+
+        // Filtre User list
+        foreach ($users as $key => $user) {
+
+            if (in_array($user, $team->getUsers()->toArray())) {
+                unset($users[$key]);
+            }
+        }
+
+        return $users;
     }
 }

@@ -16,7 +16,11 @@
         Membres :
         <br />
         {% for user in team.users %}
-            - {{ user.name }} : ( {{ user.pseudo}} )<br />
+            {% if team.createdBy.id is same as (user.id) %}
+                - {{ user.name }} : {{ user.pseudo}} (admin)<br />
+            {% else %}
+                - {{ user.name }} : {{ user.pseudo}}<br />
+            {% endif %}
         {% endfor %}
         Date de création: {{ team.createdAt | date('d M Y') }} <br />
         Crée par : {{ team.createdBy.pseudo }} <br />
