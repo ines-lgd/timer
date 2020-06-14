@@ -171,6 +171,7 @@ class Project
     }
 
     /**
+     * 
      * Get leader
      * @return User
      */
