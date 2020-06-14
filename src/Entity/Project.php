@@ -43,6 +43,16 @@ class Project
     private $team;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $leader;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -52,16 +62,6 @@ class Project
         $this->createdAt = new \DateTime();
     }
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    private $createdBy;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    private $leader;
-    
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
