@@ -67,6 +67,7 @@ class Project
      */
     private $updatedAt;
 
+    
     /**
      * Get id Project
      * @return int|null
