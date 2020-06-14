@@ -26,12 +26,12 @@ class Project
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
-
+/*
     /**
      * @ORM\Column(type="time")
-     */
+     * /
     private $time;
-
+*/
     /**
      * @ORM\Column(type="datetime")
      */
@@ -70,7 +70,7 @@ class Project
 
         return $this;
     }
-
+/*
     public function getTime(): ?\DateTimeInterface
     {
         return $this->time;
@@ -82,7 +82,7 @@ class Project
 
         return $this;
     }
-
+*/
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
