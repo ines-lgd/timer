@@ -35,10 +35,10 @@ class Project
     /**
      * @ORM\Column(type="datetime")
      */
-    private $debutDate;
+    private $createdAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="leader")
      */
     private $leader;
 
@@ -83,14 +83,14 @@ class Project
         return $this;
     }
 
-    public function getDebutDate(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->debutDate;
+        return $this->createdAt;
     }
 
-    public function setDebutDate(\DateTimeInterface $debutDate): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->debutDate = $debutDate;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
