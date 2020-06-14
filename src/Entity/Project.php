@@ -53,6 +53,7 @@ class Project
     private $createdBy;
 
     /**
+     * 
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $leader;
