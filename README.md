@@ -19,7 +19,7 @@ Réalisé par :
 - Configurer le fichier **.env**
 - Lancer la commande pour installer les services  
     `make build`
-- Mettre a jour Composer
+- Mettre a jour Composer  
     `composer update`
 - Lancer la commande permettant de se connecter au container  
     `make connect`

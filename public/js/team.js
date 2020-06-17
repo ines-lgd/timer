@@ -1,17 +1,20 @@
 $(document).ready(function () {
 
-
-    $("#add_user").on("click", function (e) {
+    /*$("#page").on("submit", "form",  function (e) {
         e.preventDefault();
-        let url = "/get_user/" + $("#team_users").val();
+        const form = $(this);
         //$("#loader").show();
+        $('#page').fadeOut();
         $.ajax({
-            type: "GET",
-            url: url,
-            success : function success(user) {
-                console.log(user);
+            type: "POST",
+            url: form.attr('action'),
+            data: new FormData(this),
+            contentType: false,
+            processData: false,
+            success : function success() {
+                $('#page').fadeIn();
             }
         })
-    });
+    });*/
 
 })

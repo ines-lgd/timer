@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Team;
+use App\Entity\User;
 use App\Form\UserTeamType;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,12 +33,13 @@ class UserTeamController extends AbstractController
     }
 
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("team/add_user/{id}", name="add_user_team")
      * @param Request $request
      * @param int $id
      * @return Response
      */
-    public function addUser(Request $request, int $id)
+    public function add(Request $request, int $id)
     {
         // Get Team and Users
         $team = $this->teamRepository->find($id);
@@ -86,12 +89,13 @@ class UserTeamController extends AbstractController
     }
 
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/team/delete_user/{team_id}/{user_id}", name="delete_user_team")
      * @param int $team_id
      * @param int $user_id
      * @return RedirectResponse
      */
-    public function removeUser(int $team_id, int $user_id)
+    public function remove(int $team_id, int $user_id)
     {
         // Get Team, User and User logged
         $team = $this->teamRepository->find($team_id);
@@ -101,7 +105,7 @@ class UserTeamController extends AbstractController
         // Check if User logged is Creator and if User removed is Creator
         if (
             $team->getCreatedBy()->getId() !== $user_logged->getId() ||
-            $team->getCreatedBy()->getId() === $user->getId()
+            $team->getCreatedBy()->getId() !== $user->getId()
         ) {
 
             // Add message flash
@@ -118,13 +122,17 @@ class UserTeamController extends AbstractController
         $this->entityManager->flush();
 
         // Add message flash
-        $this->addFlash('notification', $user->getName() . ' a été supprimer du groupe.');
+        $this->addFlash('notification', $user->getName() .' a été supprimer du groupe.');
 
         return $this->redirectToRoute('show_team', [
             'id' => $team_id
         ]);
     }
 
+    /**
+     * @param Team $team
+     * @return User[]
+     */
     public function getUsers(Team $team) {
 
         // Get all Users
@@ -133,6 +141,7 @@ class UserTeamController extends AbstractController
         // Filtre User list
         foreach ($users as $key => $user) {
 
+            // Remove User already in Team
             if (in_array($user, $team->getUsers()->toArray())) {
                 unset($users[$key]);
             }

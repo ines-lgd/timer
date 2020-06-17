@@ -5,13 +5,11 @@ namespace App\Controller;
 use App\Entity\Team;
 use App\Form\TeamType;
 use App\Form\UpdateTeamType;
-use App\Form\UserTeamType;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +32,8 @@ class TeamController extends AbstractController
     }
 
     /**
-     * @Route("/team/list", name="list_teams")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @Route("/team", name="list_teams")
      * @return Response
      */
     public function list()
@@ -48,6 +47,7 @@ class TeamController extends AbstractController
     }
 
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/team/add", name="add_team")
      * @param Request $request
      * @return Response
@@ -164,6 +164,7 @@ class TeamController extends AbstractController
     }
 
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/team/{id}", name="show_team")
      * @param int $id
      * @return Response

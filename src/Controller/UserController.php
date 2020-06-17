@@ -6,13 +6,16 @@ use App\Entity\User;
 use App\Form\RegisterType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Security\UserAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class UserController extends AbstractController
 {
@@ -28,10 +31,11 @@ class UserController extends AbstractController
     }
 
     /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/users", name="list_users")
      * @return Response
      */
-    public function all()
+    public function list()
     {
         // Get all users
         $users = $this->userRepository->findAll();
@@ -45,12 +49,24 @@ class UserController extends AbstractController
      * @Route("/register", name="app_register")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param GuardAuthenticatorHandler $guardHandler
+     * @param UserAuthenticator $authenticator
      * @return RedirectResponse|Response
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register
+    (
+        Request $request,
+        UserPasswordEncoderInterface $passwordEncoder,
+        GuardAuthenticatorHandler $guardHandler,
+        UserAuthenticator $authenticator
+    )
     {
-        // Redirect if an User is log
+        // Redirect if an User is logged
         if ($this->getUser()) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous êtes déjà connecté en tant que '. $this->getUser()->getUsername() .'.');
+
             return $this->redirectToRoute('app_home');
         }
 
@@ -72,10 +88,15 @@ class UserController extends AbstractController
             // Add message flash
             $this->addFlash('notification', 'Inscription effectué.');
 
-            return $this->redirectToRoute('app_home');
+            // Connect User
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                $user,
+                $request,
+                $authenticator,
+                'main'
+            );
         }
 
-        // View form User
         return $this->render('user/form.html.twig', [
             'form' => $form->createView()
         ]);
@@ -96,7 +117,7 @@ class UserController extends AbstractController
         if ($user->getUsername() !== $this->getUser()->getUsername()) {
 
             // Add message flash
-            $this->addFlash('warning', 'Vous ne pouvez pas modifier cet utlisateur.');
+            $this->addFlash('warning', 'Vous ne pouvez pas modifier cet utilisateur.');
 
             return $this->redirectToRoute('app_home');
         }
@@ -117,7 +138,6 @@ class UserController extends AbstractController
             return $this->redirectToRoute('list_users');
         }
 
-        // View form User
         return $this->render('user/form.html.twig', [
             'form' => $form->createView()
         ]);
