@@ -71,8 +71,8 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
         if (!$user) {
-            // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+
+            throw new CustomUserMessageAuthenticationException('Cet adresse e-mail est introuvable.');
         }
 
         return $user;
@@ -80,7 +80,14 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        $password = $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+
+        if (!$password) {
+
+            throw new CustomUserMessageAuthenticationException('Le mot de passe est incorrect.');
+        }
+
+        return $password;
     }
 
     /**
