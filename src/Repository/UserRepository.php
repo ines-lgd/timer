@@ -47,4 +47,18 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    public function gettUserIdByPseudo($pseudo): ?User
+    {
+
+        return $this->createQueryBuilder('Select u.Id From User u ')
+            ->andWhere('u.pseudo = :pseudo')
+            ->setParameter('pseudo', $pseudo)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    
+
 }
