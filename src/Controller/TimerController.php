@@ -34,26 +34,21 @@ class TimerController extends AbstractController
             'controller_name' => 'TimerController',
         ]);
     }
-
-    public function addTime($id_project,$time , $type): Response
+    //
+    public function addTime($id_project, $time, $type): Response
     {
+        //get id_user by pseudo
         $pseudo = $this->getUser()->getUserName();
         $id_user = $this->userRepository->gettUserIdByPseudo($pseudo);
-        // you can fetch the EntityManager via $this->getDoctrine()
-        // or you can add an argument to the action: createProduct(EntityManagerInterface $entityManager)
-        $entityManager = $this->getDoctrine()->getManager();
-
+        
+        //add time track 
         $timer = new Timer();
         $timer->setIdProject($id_project);
         $timer->setTimeUse($time);
         $timer->setType($type);
         $timer->setIdUser($id_user);
-
-
-        // tell Doctrine you want to (eventually) save the Product (no queries yet)
-        $entityManager->persist($product);
-
-        // actually executes the queries (i.e. the INSERT query)
+        
+        $entityManager->persist($timer);
         $entityManager->flush();
 
         return new Response('Saved new product with id '.$product->getId());
