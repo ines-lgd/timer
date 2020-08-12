@@ -1,5 +1,9 @@
+html {
+    background-color: #064872;
+}
 .timer-background {
-    background-color: #fff3e0;
+    background-color: #064872;
+    color: #f5f5f5;
 }
 
 #home-banner-image {
@@ -11,7 +15,7 @@
 
 #home-banner-image-bg-color {
 
-    background-color: RGBA(0, 0, 0, 0.4);
+    background-color: RGBA(0, 0, 0, 0.3);
     min-height: 650px;
     color: white;
     text-align: center;
@@ -35,9 +39,16 @@
 
 .home-card {
     font-weight: bold;
-    color: #454545;
+    color: white;
+    /*text-decoration: underline;*/
 }
 .home-card:hover {
-    color: #007BFF;
+    color: #E0E0E0;
     text-decoration: none;
+}
+
+.home-card-titre {
+    width: 100%;
+    border-bottom: white 1px solid;
+    padding-bottom: 5px;
 }

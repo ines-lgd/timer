@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+<<<<<<< 56dd82488364e9855bb7da6763a25c85eabe8ce4
 {% block title %}Hello TeamController!{% endblock %}
 
 {% block body %}
@@ -32,4 +33,45 @@
         <br />
     {% endfor %}
 </div>
+=======
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Team View</li>
+        </ol>
+    </nav>
+    <h1> Team View</h1>
+    <div class="container py-5" id="home-background">
+        <div class="row">
+            <div class="col-md-12 ">
+                <h1> Timer Application</h1>
+                <p class="pt-3">Timer application description, ndustry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchange</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 my-4">
+                <h4 class="home-card-titre"><a href="{{ path('app_home') }}" class="home-card font-weight-bold my-3">Team View</a></h4>
+                <a href="{{ path('app_home') }}"><img src="img/team.jpg" alt="photo team" class=" img-fluid my-2"></a>
+                <div class="my-3">Number of team : 3</div>
+                <div class="my-3">Last team you worked with: team Lorem</div>
+            </div>
+            <div class="col-md-4 my-4">
+                <h4 class="home-card-titre"><a href="{{ path('app_home') }}" class="home-card font-weight-bold my-3">Project View</a></h4>
+                <a href="{{ path('app_home') }}"><img src="img/project.jpg" alt="photo project" class="img-fluid my-2"></a>
+                <div class="my-3">Number of project : 3</div>
+                <div class="my-3">Last project you worked on: Project Lorem</div>
+            </div>
+            <div class="col-md-4 my-4">
+                <h4 class="home-card-titre"><a href="{{ path('app_home') }}" class="home-card font-weight-bold my-3">Timer View</a></h4>
+                <a href="{{ path('app_home') }}"><img src="img/timer.jpg" alt="photo timer" class=" img-fluid my-2"></a>
+                <div class="my-3">Number of Time you worked : 150h 30min 2s</div>
+                <div class="my-3">Last Session duration : 3h 50min 20s</div>
+            </div>
+        </div>
+    </div>
+
+
+>>>>>>> team view + nav + home
 {% endblock %}
