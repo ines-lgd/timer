@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TimerController!{% endblock %}
+
+{% block body %}
+    <h1>Timer</h1>
+
+    <div>Nome : {{ timer.name }}</div>
+    <div>Status {{ timer.getStatusToString }}</div>
+
+    {% if timer.end is not empty %}
+        <div>Temps : {{ timer.getTime }}</div>
+    {% endif %}
+
+    <div>Réaliser par : {{ timer.user.username }}</div>
+    <div>Date de création : {{ timer.createdAt | date('d M Y') }}</div>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    {% if timer.getStatusToString == 'PRÊT' %}
+        <a href="{{ path('run_timer', {id: timer.id}) }}">lancer le timer</a> <br />
+    {% endif %}
+    {% if timer.getStatusToString == 'EN COUR'%}
+        <a href="{{ path('stop_timer', {id: timer.id}) }}">Arrêter timer</a> <br />
+    {% endif %}
+{% endblock %}
