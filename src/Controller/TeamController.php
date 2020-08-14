@@ -71,14 +71,10 @@ class TeamController extends AbstractController
             $this->entityManager->flush();
 
             // Add message flash
-            $this->addFlash('notification', 'Le groupe a bien été créer.');
-
-            // Get Team created
-            $name = $form->get("name")->getData();
-            $new_team = $this->teamRepository->findOneBy(['name' => $name]);
+            $this->addFlash('notification', 'Le groupe a bien été créé.');
 
             return $this->redirectToRoute('add_user_team', [
-                'id' => $new_team->getId()
+                'id' => $team->getId()
             ]);
         }
 
