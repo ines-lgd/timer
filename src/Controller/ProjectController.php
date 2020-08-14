@@ -143,7 +143,7 @@ class ProjectController extends AbstractController
             // Add message flash
             $this->addFlash('notification', 'Le projet a bien été modifié.');
 
-            return $this->redirectToRoute('show_project',  [
+            return $this->redirectToRoute('show_project', [
                 'id' => $id
             ]);
         }

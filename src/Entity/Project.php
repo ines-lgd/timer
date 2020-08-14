@@ -47,13 +47,17 @@ class Project
      */
     private $createdAt;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $createdBy;
 
     /**
-     * 
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $leader;
