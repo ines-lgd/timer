@@ -37,6 +37,11 @@ class Team
     private $users;
 
     /**
+     * @ORM\OneToMany(targetEntity=Project::class, mappedBy="team")
+     */
+    private $projects;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -50,6 +55,7 @@ class Team
     {
         $this->createdAt = new \DateTime();
         $this->users = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     /**
@@ -114,6 +120,43 @@ class Team
     {
         if ($this->users->contains($user)) {
             $this->users->removeElement($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get Team Projects
+     * @return Collection|Project[]
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    /**
+     * Add Project Team
+     * @param Project $project
+     * @return $this
+     */
+    public function addProject(Project $project): self
+    {
+        if (!$this->projects->contains($project)) {
+            $this->Projects[] = $project;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove Project Team
+     * @param Project $project
+     * @return $this
+     */
+    public function removeProject(Project $project): self
+    {
+        if ($this->projects->contains($project)) {
+            $this->projects->removeElement($project);
         }
 
         return $this;
