@@ -143,6 +143,19 @@ class Project
     }
 
     /**
+     * Set create date Project
+     * @param \DateTimeInterface $createdAt
+     * @return $this
+     */
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
      * Get creator
      * @return User
      */
