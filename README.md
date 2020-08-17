@@ -20,7 +20,7 @@ Réalisé par :
 - Lancer la commande pour installer les services  
     `make build`
 - Mettre a jour Composer  
-    `composer update`
+    `composer install`
 - Lancer la commande permettant de se connecter au container  
     `make connect`
 - Mettre a jour la base de donnée  
@@ -54,7 +54,7 @@ Des commandes ont été enregistrer dans le Makefile.
     `make connect`
     
 ### Gestion GIT
-Voici quelque regles pour la gestion du GIT pour les développeurs.
+Voici quelque règles pour la gestion du GIT pour les développeurs.
 - Toutes les branches doivent partir de la branche **dev**.
 - Les noms de branches doit correspondre au nom de la fonctionnalité qui sera developpé.
 - Les noms de branches devront commencer par **feat/**.

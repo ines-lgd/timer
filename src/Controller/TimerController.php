@@ -84,6 +84,80 @@ class TimerController extends AbstractController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @Route("/timer/update/{id}", name="update_timer")
+     * @param Request $request
+     * @param int $id
+     * @return RedirectResponse|Response
+     */
+    public function update(Request $request, int $id) {
+
+        // Get Timer
+        $timer = $this->timerRepository->findOneBy(['id' => $id]);
+
+        // Check if User logged is not User's Timer
+        if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous ne pouvez pas modifier ce Timer.');
+
+            return $this->redirectToRoute('list_timer');
+        }
+
+        // Get form data
+        $form = $this->createForm(TimerType::class, $timer);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // Update Timer in database
+            $this->entityManager->persist($timer);
+            $this->entityManager->flush();
+
+            // Add message flash
+            $this->addFlash('notification', 'Le timer a bien été modifié.');
+
+            return $this->redirectToRoute('show_timer', [
+                'id' => $id
+            ]);
+        }
+
+        return $this->render('timer/form.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @Route("/timer/remove/{id}", name="remove_timer")
+     * @param int $id
+     * @return RedirectResponse|Response
+     */
+    public function remove(int $id) {
+
+        // Get Timer
+        $timer = $this->timerRepository->findOneBy(['id' => $id]);
+
+        // Check if User logged is not User's Timer
+        if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous ne pouvez pas supprimer ce Timer.');
+
+            return $this->redirectToRoute('list_timer');
+        }
+
+        // Remove Timer in database
+        $this->entityManager->remove($timer);
+        $this->entityManager->flush();
+
+        // Add message flash
+        $this->addFlash('notification', 'Le timer a bien été supprimer.');
+
+        return $this->redirectToRoute('list_timer');
+    }
+
+    /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/timer/run/{id}", name="run_timer")
      * @param int $id
      * @return RedirectResponse
