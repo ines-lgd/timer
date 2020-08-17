@@ -30,6 +30,11 @@ class Timer
     private $name;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $status;
@@ -58,6 +63,7 @@ class Timer
     public function __construct()
     {
         $this->status = false;
+        date_default_timezone_set("Europe/Paris");
         $this->createdAt = new DateTime();
     }
 
@@ -67,6 +73,7 @@ class Timer
     public function run()
     {
         if (empty($this->getStart())) {
+            date_default_timezone_set("Europe/Paris");
             $this->setStatus(true);
             $this->setStart(new DateTime());
         }
@@ -78,6 +85,7 @@ class Timer
     public function stop()
     {
         if (empty($this->getEnd())) {
+            date_default_timezone_set("Europe/Paris");
             $this->setStatus(false);
             $this->setEnd(new DateTime());
         }
@@ -241,6 +249,18 @@ class Timer
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
