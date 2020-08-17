@@ -36,6 +36,24 @@ html {
     background-color: wheat;
 }
 
+.navbar-text {
+    color: rgba(255,255,255,.5);
+    padding-left: 1rem;
+    padding-top: .5rem;
+    padding-right: 1rem;
+    padding-bottom: .5rem;
+
+}
+
+.form-ul-style li {
+    list-style: none;
+    color: #fc545c;
+
+}
+
+.button-right {
+    float: right;
+}
 
 .home-card {
     font-weight: bold;
