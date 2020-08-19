@@ -45,6 +45,18 @@ class UserTeamController extends AbstractController
         $team = $this->teamRepository->find($id);
         $users = $this->getUsers($team);
 
+        // Get User logged
+        $user_logged = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
+
+        // Check if Creator is User logged
+        if ($team->getCreatedBy()->getId() !== $user_logged->getId()) {
+
+            // Add message Flash
+            $this->addFlash('warning', 'Vous ne pouvez ajouter d’utilisateur à ce groupe.');
+
+            return $this->redirectToRoute('list_teams');
+        }
+
         // Get form data
         $form = $this->createForm(UserTeamType::class);
         $form->handleRequest($request);
@@ -104,29 +116,26 @@ class UserTeamController extends AbstractController
 
         // Check if User logged is Creator and if User removed is Creator
         if (
-            $team->getCreatedBy()->getId() !== $user_logged->getId() ||
-            $team->getCreatedBy()->getId() !== $user->getId()
+            $team->getCreatedBy()->getId() == $user_logged->getId() ||
+            $team->getCreatedBy()->getId() == $user->getId()
         ) {
+            // Remove User in Team and Update Team in database
+            $team->removeUser($user);
+            $this->entityManager->persist($team);
+            $this->entityManager->flush();
 
             // Add message flash
-            $this->addFlash('warning', 'Vous ne pouvez pas supprimer d’utilisateur pour ce groupe.');
+            $this->addFlash('notification', $user->getName() . ' a été supprimé du groupe.');
 
             return $this->redirectToRoute('show_team', [
-                'id' => $team->getId()
+                'id' => $team_id
             ]);
         }
 
-        // Remove User in Team and Update Team in database
-        $team->removeUser($user);
-        $this->entityManager->persist($team);
-        $this->entityManager->flush();
-
         // Add message flash
-        $this->addFlash('notification', $user->getName() .' a été supprimer du groupe.');
+        $this->addFlash('warning', 'Vous ne pouvez pas supprimer d’utilisateur pour ce groupe.');
 
-        return $this->redirectToRoute('show_team', [
-            'id' => $team_id
-        ]);
+        return $this->redirectToRoute('list_team');
     }
 
     /**
@@ -138,7 +147,7 @@ class UserTeamController extends AbstractController
         // Get all Users
         $users = $this->userRepository->findAll();
 
-        // Filtre User list
+        // Filter User list
         foreach ($users as $key => $user) {
 
             // Remove User already in Team

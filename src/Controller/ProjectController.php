@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Project;
+use App\Form\ProjectTeamType;
 use App\Form\ProjectType;
-use App\Form\UpdateProjectType;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use App\Repository\ProjectRepository;
@@ -71,10 +71,22 @@ class ProjectController extends AbstractController
         $creator = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
         $project->setCreatedBy($creator);
 
+        // Check User have Team
+        if (empty($creator->getTeams()->toArray())) {
+
+            // Add message flash
+            $this->addFlash('notification', 'Vous n’avez aucun groupe.');
+
+            return $this->redirectToRoute('add_team');
+        }
+
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Set Creator as Leader
+            $project->setLeader($creator);
 
             // Add Project in database
             $this->entityManager->persist($project);
@@ -105,8 +117,8 @@ class ProjectController extends AbstractController
         // Get Project and Team
         $project = $this->projectRepository->find($id);
 
-        // Check if User is Creator
-        if ($project->getCreatedBy()->getUsername() !== $this->getUser()->getUsername()) {
+        // Check if User is Leader
+        if ($project->getLeader()->getUsername() !== $this->getUser()->getUsername()) {
 
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas modifier ce projet.');
@@ -115,11 +127,13 @@ class ProjectController extends AbstractController
         }
 
         // Get form data
-        $form = $this->createForm(ProjectType::class, $project);
+        $form = $this->createForm(ProjectTeamType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // Set time updatedAt
+            date_default_timezone_set('Europe/Paris');
             $project->setUpdatedAt(new \DateTime());
 
             // Update Project in database
@@ -151,8 +165,8 @@ class ProjectController extends AbstractController
         // Get Project and Leader
         $project = $this->projectRepository->find($id);
 
-        // Check if User is Creator Team
-        if ($project->getCreatedBy()->getUsername() !== $this->getUser()->getUsername()) {
+        // Check if User is Leader Team
+        if ($project->getLeader()->getPseudo() !== $this->getUser()->getUsername()) {
 
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas supprimer ce projet.');

@@ -17,7 +17,9 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Ajouter une équipe</h1>
+    <h1>{% if app.request.get('_route') == 'update_team' %}
+            Modifier l'{% else %}Ajouter une
+        {% endif %}équipe</h1>
 
     {{ form_start(form) }}
 

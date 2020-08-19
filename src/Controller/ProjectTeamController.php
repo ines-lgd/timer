@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Team;
 use App\Entity\Project;
-use App\Entity\User;
 use App\Form\ProjectTeamType;
 use App\Repository\TeamRepository;
 use App\Repository\ProjectRepository;
@@ -12,7 +11,6 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,17 +47,32 @@ class ProjectTeamController extends AbstractController
     {
         // Get Team
         $team = $this->teamRepository->findOneBy(['id' => $id]);
+
+        // Get User logged
         $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
+
+        // Create Project with Team
         $project = new Project();
         $project->setTeam($team);
-        $project->setCreatedBy($user);
-        $project->setLeader($user);
+
+        // Check if User is not in Team
+        if (!in_array($user, $team->getUsers()->toArray())) {
+
+            // Add message Flash
+            $this->addFlash('warning', 'Vous ne pouvez ajouter de projet à ce groupe.');
+
+            return $this->redirectToRoute('list_projects');
+        }
 
         // Get form data
         $form = $this->createForm(ProjectTeamType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Set Creator and Leader
+            $project->setCreatedBy($user);
+            $project->setLeader($user);
 
             // Add Project in database
             $this->entityManager->persist($project);
@@ -76,43 +89,6 @@ class ProjectTeamController extends AbstractController
         return $this->render('project/form.html.twig', [
             'team' => $team,
             'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/team/delete_project/{team_id}/{project_id}", name="delete_project_team")
-     * @param int $team_id
-     * @param int $project_id
-     * @return RedirectResponse
-     */
-    public function removeProject(int $team_id, int $project_id)
-    {
-        // Get Team, User and User logged
-        $team = $this->teamRepository->find($team_id);
-        $project = $this->projectRepository->find($project_id);
-
-        // Check if User is Creator Team
-        if ($team->getCreatedBy()->getUsername() !== $this->getUser()->getUsername()) {
-
-            // Add message flash
-            $this->addFlash('warning', 'Vous ne pouvez pas supprimer ce projet.');
-
-            return $this->redirectToRoute('show_team', [
-                'id' => $team->getId()
-            ]);
-        }
-
-        // Remove Project in Team and Update Team in database
-        $team->removeProject($project);
-        $this->entityManager->persist($team);
-        $this->entityManager->flush();
-
-        // Add message flash
-        $this->addFlash('notification', $project->getName() .' a été supprimé du groupe.');
-
-        return $this->redirectToRoute('show_team', [
-            'id' => $team_id
         ]);
     }
 
