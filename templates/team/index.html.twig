@@ -57,25 +57,3 @@
         {% endfor %}
     </div>
 {% endblock %}
-=======
-    {% for team in teams %}
-        <a href="{{ path('show_team', {id: team.id}) }}">{{ team.name }}</a> <br />
-        Membres :
-        <br />
-        {% for user in team.users %}
-            {% if team.createdBy.id is same as (user.id) %}
-                - {{ user.name }} : {{ user.pseudo}} (admin)<br />
-            {% else %}
-                - {{ user.name }} : {{ user.pseudo}}<br />
-            {% endif %}
-        {% endfor %}
-        Date de création: {{ team.createdAt | date('d M Y') }} <br />
-        Créé par : {{ team.createdBy.pseudo }} <br />
-
-        <br />
-    {% endfor %}
-    <br />
-    <a href="{{ path('add_team') }}">Créer son équipe</a>
-</div>
-{% endblock %}
->>>>>>> update Project

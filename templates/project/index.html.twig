@@ -37,13 +37,13 @@
                                         <div>{{ user.lastname }} {{ user.firstname }} ({{ user.pseudo }})</div>
                                     </div>
                                 {% endif %}
-                                <div class="ml-3 mt-3 col-12">
-                                    Date de création: {{ project.createdAt | date('d M Y') }}
-                                </div>
-                                <div class="ml-3 mt-3 col-12">
-                                    Mis à jour le : {{ project.updatedAt | date('d/m/Y H:i:s') }}
-                                </div>
                             {% endfor %}
+                            <div class="ml-3 mt-3 col-12">
+                                Date de création: {{ project.createdAt | date('d M Y') }}
+                            </div>
+                            <div class="ml-3 mt-3 col-12">
+                                Mis à jour le : {{ project.updatedAt | date('d/m/Y H:i:s') }}
+                            </div>
                         </div>
                     </div>
                     <div class="row ml-md-2 my-3">
