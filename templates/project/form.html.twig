@@ -17,29 +17,12 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>{% if app.request.get('_route') == 'add_project' %}
-        Ajout
+    <h1>{% if app.request.get('_route') == 'update_project' %}
+        Modifier le
         {% else %}
-        Modifier
-        {% endif %}
+        Ajouter un
+        {% endif %} projet</h1>
 
-        Projet</h1>
-
-    {{ form_start(form) }}
-
-    {{ form_label(form.name, 'Nom du projet', {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.name, {'attr': {'class': 'form-input'}}) }}
-    <div class="form-error">{{ form_errors(form.name) }}</div>
-
-    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.description, {'attr': {'class': 'form-input'}}) }}
-    <div class="form-error">{{ form_errors(form.description) }}</div>
-
-    {{ form_label(form.team, 'Team', {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.team, {'attr': {'class': 'form-input'}}) }}
-    <div class="form-error">{{ form_errors(form.team) }}</div>
-
-    {{ form_widget(form.submit, { 'label': 'Valider', 'attr': {'class': 'btn-sub'} }) }}
-    {{ form_end(form) }}
+    {{ form(form) }}
 </div>
 {% endblock %}

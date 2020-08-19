@@ -21,6 +21,7 @@ class ProjectType extends AbstractType
             ->add('description', TextType::class)
             ->add('team', EntityType::class, [
                 'class' => Team::class,
+                'choices' => $options['data']->getCreatedBy()->getTeams(),
                 'choice_label' => 'name'
             ])
             ->add('submit', SubmitType::class)

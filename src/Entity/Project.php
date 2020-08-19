@@ -63,6 +63,11 @@ class Project
     }
     
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
      * Get id Project
      * @return int|null
      */
@@ -180,6 +185,27 @@ class Project
     public function setLeader(User $leader): self
     {
         $this->leader = $leader;
+
+        return $this;
+    }
+
+    /**
+     * Get last update date
+     * @return \DateTimeInterface|null
+     */
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set last update date
+     * @param \DateTimeInterface|null $updatedAt
+     * @return $this
+     */
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
