@@ -4,14 +4,15 @@
 Application web permettant de recenser le temps passé à travailler sur un projet.
 Dans le cadre d'un projet de group en autonomie.
 
-Sujet : https://gist.github.com/capywebformation/5298abc51cb60f087a142e2c843ed740
+Sujet : https://gist.github.com/capywebformation/5298abc51cb60f087a142e2c843ed740  
+Trello : https://trello.com/b/GWyCy1AM/timer
 
 Projet proposé par **Hiren PATEL**.
 
 Réalisé par :
 - RUFFINEL Josué
 - YIU Léo
-- LEAGAUD Inès
+- LEGAUD Inès
 - Wu Chin Hung
 
 ### Installation 
@@ -20,7 +21,7 @@ Réalisé par :
 - Lancer la commande pour installer les services  
     `make build`
 - Mettre a jour Composer  
-    `composer update`
+    `composer install`
 - Lancer la commande permettant de se connecter au container  
     `make connect`
 - Mettre a jour la base de donnée  
@@ -54,7 +55,7 @@ Des commandes ont été enregistrer dans le Makefile.
     `make connect`
     
 ### Gestion GIT
-Voici quelque regles pour la gestion du GIT pour les développeurs.
+Voici quelque règles pour la gestion du GIT pour les développeurs.
 - Toutes les branches doivent partir de la branche **dev**.
 - Les noms de branches doit correspondre au nom de la fonctionnalité qui sera developpé.
 - Les noms de branches devront commencer par **feat/**.

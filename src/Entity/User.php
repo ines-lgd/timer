@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -80,11 +82,17 @@ class User implements UserInterface
      */
     private $teams;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Timer::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $timers;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
         $this->teams = new ArrayCollection();
+        $this->timers = new ArrayCollection();
     }
 
     /**
@@ -191,9 +199,9 @@ class User implements UserInterface
 
     /**
      * Get create date User
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -284,5 +292,47 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         return null;
+    }
+
+    /**
+     * Get all Timers
+     * @return Collection|Timer[]
+     */
+    public function getTimers(): Collection
+    {
+        return $this->timers;
+    }
+
+    /**
+     * Add Timer
+     * @param Timer $timer
+     * @return $this
+     */
+    public function addTime(Timer $timer): self
+    {
+        if (!$this->timers->contains($timer)) {
+            $this->timers[] = $timer;
+            $timer->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove Timer
+     * @param Timer $timer
+     * @return $this
+     */
+    public function removeTime(Timer $timer): self
+    {
+        if ($this->timers->contains($timer)) {
+            $this->timers->removeElement($timer);
+            // set the owning side to null (unless already changed)
+            if ($timer->getUser() === $this) {
+                $timer->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
