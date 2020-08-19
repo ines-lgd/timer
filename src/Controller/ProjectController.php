@@ -36,13 +36,20 @@ class ProjectController extends AbstractController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/project", name="list_projects")
+     * @Route("/projects", name="list_projects")
      * @return Response
      */
     public function list()
     {
         // Get all projects
-        $projects = $this->projectRepository->findAll();
+        $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
+        $projects = [];
+
+        foreach ($user->getTeams() as $team) {
+            foreach ($team->getProjects() as $project) {
+                array_push($projects, $project);
+            }
+        }
 
         return $this->render('project/index.html.twig', [
             'projects' => $projects
@@ -59,14 +66,15 @@ class ProjectController extends AbstractController
     {
         // Create Project and get form data
         $project = new Project();
+
+        // Add Creator and Team
+        $creator = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
+        $project->setCreatedBy($creator);
+
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // Add Creator and Team
-            $creator = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
-            $project->setCreatedBy($creator);
 
             // Add Project in database
             $this->entityManager->persist($project);
@@ -111,6 +119,8 @@ class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $project->setUpdatedAt(new \DateTime());
 
             // Update Project in database
             $this->entityManager->persist($project);
@@ -170,6 +180,14 @@ class ProjectController extends AbstractController
     {
         // Get Project
         $project = $this->projectRepository->findOneBy(['id' => $id]);
+
+        if ($project === null) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Ce projet n’existe pas ou a été supprimé.');
+
+            return $this->redirectToRoute('list_projects');
+        }
 
         return $this->render('project/view.html.twig', [
             'project' => $project

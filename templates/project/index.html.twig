@@ -25,7 +25,6 @@
                             </span>
                         </div>
                         <div class="col-12 ml-2"> Project : <a href="{{ path('show_project', {id: project.id}) }}">{{ project.name }}</a></div>
-
                         <div class="ml-3 mt-3 col-12">
                             {% for user in project.team.users %}
                                 <div class="col-12 d-flex">
@@ -49,6 +48,5 @@
         </div>
         <hr>
         {% endfor %}
-
     </div>
 {% endblock %}
