@@ -21,7 +21,7 @@
         {% endif %}
 
         Date de création: {{ timer.createdAt | date('d M Y') }} <br />
-        Crée par : {{ timer.user.pseudo }} <br />
+        Statut {{ timer.getStatusToString }}
         <br />
         <br />
         <br />

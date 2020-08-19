@@ -39,8 +39,11 @@ class TimerController extends AbstractController
         // Get User logged
         $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
 
+        // Get Timer User logged
+        $timers = $this->timerRepository->findBy(['user' => $user->getId()], ['createdAt' => 'DESC']);
+
         return $this->render('timer/index.html.twig', [
-            'timers' => $user->getTimers()
+            'timers' => $timers
         ]);
     }
 
@@ -176,6 +179,20 @@ class TimerController extends AbstractController
             return $this->redirectToRoute('list_timer');
         }
 
+        // Get Timer started
+        $timer_started = $this->timerRepository->findOneBy(['status' => true, 'user' => $timer->getUser()->getId()]);
+
+        if ($timer_started) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous avez déjà un Timer en cours. Arrêtez ou supprimez ce pour pouvoir en lancer un autre.');
+
+            // Redirect to Timer started
+            return $this->redirectToRoute('show_timer', [
+               'id' => $timer_started->getId()
+            ]);
+        }
+
         // Run Timer
         $timer->run();
 
@@ -228,6 +245,41 @@ class TimerController extends AbstractController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @Route("/timer/reset/{id}", name="reset_timer")
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function reset(int $id) {
+
+        // Get Timer in database
+        $timer = $this->timerRepository->findOneBy(['id' => $id]);
+
+        // Check if User logged is not User's Timer
+        if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
+
+            // Add message flash
+            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce Timer.');
+
+            return $this->redirectToRoute('list_timer');
+        }
+
+        // Reset Timer
+        $timer->reset();
+
+        // Update Timer in database
+        $this->entityManager->persist($timer);
+        $this->entityManager->flush();
+
+        // Add message flash
+        $this->addFlash('notification','Timer annulé !');
+
+        return $this->redirectToRoute('show_timer', [
+            'id' => $timer->getId()
+        ]);
+    }
+
+    /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/timer/{id}", name="show_timer")
      * @param int $id
      * @return Response
@@ -236,6 +288,13 @@ class TimerController extends AbstractController
 
         // Get Timer in database
         $timer = $this->timerRepository->findOneBy(['id' => $id]);
+
+        if ($timer === null) {
+
+            $this->addFlash('notification', 'Ce timer n’existe pas ou a été supprimé.');
+
+            return $this->redirectToRoute('list_timer');
+        }
 
         // Check if User logged is not User's Timer
         if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {

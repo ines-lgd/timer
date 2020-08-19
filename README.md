@@ -4,14 +4,15 @@
 Application web permettant de recenser le temps passé à travailler sur un projet.
 Dans le cadre d'un projet de group en autonomie.
 
-Sujet : https://gist.github.com/capywebformation/5298abc51cb60f087a142e2c843ed740
+Sujet : https://gist.github.com/capywebformation/5298abc51cb60f087a142e2c843ed740  
+Trello : https://trello.com/b/GWyCy1AM/timer
 
 Projet proposé par **Hiren PATEL**.
 
 Réalisé par :
 - RUFFINEL Josué
 - YIU Léo
-- LEAGAUD Inès
+- LEGAUD Inès
 - Wu Chin Hung
 
 ### Installation 

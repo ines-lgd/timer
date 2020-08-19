@@ -92,6 +92,18 @@ class Timer
     }
 
     /**
+     * Reset Timer
+     */
+    public function reset()
+    {
+        if(!empty($this->start)) {
+            $this->setStatus(false);
+            $this->setStart(null);
+            $this->setEnd(null);
+        }
+    }
+
+    /**
      * Get
      * @return mixed
      */
@@ -124,7 +136,7 @@ class Timer
     {
 
         if ($this->getStatus()) {
-            $status = 'EN COUR';
+            $status = 'EN COURS';
         }
         else if (!$this->getStatus() && $this->getEnd()){
             $status = 'TERMINÉ';

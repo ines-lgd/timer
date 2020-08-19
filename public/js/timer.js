@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     let status = div.data('status');
 
-    if (status === "EN COUR") {
+    if (status === "EN COURS") {
 
         const timer = setInterval(function (){
 

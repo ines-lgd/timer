@@ -11,20 +11,22 @@
         <script src="{{ asset('js/timer.js') }}" type="text/javascript"></script>
     </head>
 
+    <a href="{{ path('list_timer')}}">Liste</a>
     <h1>Timer</h1>
 
     <a href="{{ path('update_timer', {id: timer.id}) }}">Modifier</a>
+    <a href="{{ path('remove_timer', {id: timer.id}) }}">Supprimer</a>
     <br />
     <br />
 
     <div>Nom : {{ timer.name }}</div>
-    <div>Status {{ timer.getStatusToString }}</div>
+    <div>Statut {{ timer.getStatusToString }}</div>
 
     {% if timer.end is not empty %}
         <div>Temps : {{ timer.getTime }}</div>
     {% endif %}
     <div id="timer" data-status="{{ timer.getStatusToString }}" data-timer="{{ timer.start | json_encode() }}"></div>
-    <div>Réaliser par : {{ timer.user.username }}</div>
+    <div>Réalisé par : {{ timer.user.username }}</div>
 
     <div>Date de création : {{ timer.createdAt | date('d M Y') }}</div>
 
@@ -40,7 +42,10 @@
     {% if timer.getStatusToString == 'PRÊT' %}
         <a href="{{ path('run_timer', {id: timer.id}) }}">lancer le timer</a> <br />
     {% endif %}
-    {% if timer.getStatusToString == 'EN COUR'%}
-        <a href="{{ path('stop_timer', {id: timer.id}) }}">Arrêter timer</a> <br />
+    {% if timer.getStatusToString == 'EN COURS'%}
+        <a href="{{ path('stop_timer', {id: timer.id}) }}">Arrêter le timer</a> <br />
+    {% endif %}
+    {% if timer.start is not null and timer.end is null %}
+        <a href="{{ path('reset_timer', {id: timer.id}) }}">Annuler le timer</a> <br />
     {% endif %}
 {% endblock %}
