@@ -291,6 +291,7 @@ class TimerController extends AbstractController
 
         if ($timer === null) {
 
+            // Add message flash
             $this->addFlash('notification', 'Ce timer n’existe pas ou a été supprimé.');
 
             return $this->redirectToRoute('list_timer');
@@ -309,5 +310,4 @@ class TimerController extends AbstractController
             'timer' => $timer
         ]);
     }
-
 }
