@@ -25,10 +25,24 @@
             <h4>Team :</h4>
             <a href="{{ path('show_team', {id: project.team.id }) }}">{{ project.team.name }}</a>
             <br />
+            <h4>Leader :</h4>
+            {{ project.leader.pseudo }}
             <br />
+            <h4>Créé par :</h4>
+            {{ project.createdBy.pseudo }}
+            <br />
+            <h4>Date de création : </h4>{{ project.createdAt | date('d M Y') }}
+            <br />
+            <h4>Date de dernière mise à jour : </h4>{{ project.updatedAt | date('d M Y H:i:s') }}
+            <br />
+            <br />
+
+            {% if app.user.pseudo == project.leader.pseudo %}
             <a href="{{ path('update_project', {id: project.id }) }}">Modifier</a>
             <br />
             <a style="color: red" href="{{ path('remove_project', {id: project.id}) }}">Supprimer</a>
+            {% endif %}
+
         {% endif %}
 
     </div>
