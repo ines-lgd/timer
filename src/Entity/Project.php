@@ -57,15 +57,16 @@ class Project
      */
     private $leader;
 
-    public function __construct()
-    {
-        $this->createdAt = new \DateTime();
-    }
-    
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
 
     /**
      * Get id Project
@@ -84,6 +85,7 @@ class Project
     {
         return $this->name;
     }
+
     /**
      * Set name Project
      * @param string $name
@@ -145,6 +147,19 @@ class Project
     public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set create date Project
+     * @param \DateTimeInterface $createdAt
+     * @return $this
+     */
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     /**
