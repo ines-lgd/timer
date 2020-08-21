@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Timer;
 use App\Form\TimerType;
+use App\Repository\ProjectRepository;
 use App\Repository\TimerRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,22 +20,47 @@ class TimerController extends AbstractController
 
     private $timerRepository;
 
+    private $projectRepository;
+
     private $userRepository;
 
     private $entityManager;
 
-    public function __construct(TimerRepository $timerRepository, UserRepository $userRepository, EntityManagerInterface $entityManager)
+    public function __construct
+    (
+        TimerRepository $timerRepository,
+        ProjectRepository $projectRepository,
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager
+    )
     {
         $this->timerRepository = $timerRepository;
+        $this->projectRepository = $projectRepository;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
     }
 
     /**
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/timers", name="list_timer")
+     * @Route("/timers/{id}",name="list_timers")
+     * @param int $id
+     * @return Response
      */
-    public function list()
+    public function list(int $id)
+    {
+        // Get Timers Project
+        $timers = $this->timerRepository->findBy(['project' => $id], ['createdAt' => 'DESC']);
+
+        return $this->render('timer/index.html.twig', [
+            'timers' => $timers,
+            'project_id' => $id
+        ]);
+    }
+
+    /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @Route("/timers", name="list_user_timers")
+     */
+    public function list_user()
     {
         // Get User logged
         $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
@@ -49,14 +75,17 @@ class TimerController extends AbstractController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/timer/add", name="add_timer")
+     * @Route("/timer/add/{id}", name="add_timer")
      * @param Request $request
+     * @param int $id
      * @return Response
      */
-    public function create(Request $request)
+    public function create(Request $request, int $id)
     {
-        // Create Timer and get form data
+        // Create Timer and get Project and form data
         $timer = new Timer();
+        $project = $this->projectRepository->find($id);
+
         $form = $this->createForm(TimerType::class, $timer);
         $form->handleRequest($request);
 
@@ -65,15 +94,17 @@ class TimerController extends AbstractController
             // Get User logged
             $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
 
-            // Start Timer
+            // Set User and Project
+            $project->setUpdatedAt();
             $timer->setUser($user);
+            $timer->setProject($project);
 
             // Add Timer in database
             $this->entityManager->persist($timer);
             $this->entityManager->flush();
 
             // Add message flash
-            $this->addFlash('notification', 'le Timer a bien été créer.');
+            $this->addFlash('notification', 'Le timer a bien été crée.');
 
             return $this->redirectToRoute('show_timer', [
                 'id' => $timer->getId()
@@ -101,9 +132,9 @@ class TimerController extends AbstractController
         if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
 
             // Add message flash
-            $this->addFlash('warning', 'Vous ne pouvez pas modifier ce Timer.');
+            $this->addFlash('warning', 'Vous ne pouvez pas modifier ce timer.');
 
-            return $this->redirectToRoute('list_timer');
+            return $this->redirectToRoute('list_timers');
         }
 
         // Get form data
@@ -111,6 +142,9 @@ class TimerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Set update date Project
+            $timer->getProject()->setUpdatedAt();
 
             // Update Timer in database
             $this->entityManager->persist($timer);
@@ -146,17 +180,22 @@ class TimerController extends AbstractController
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas supprimer ce Timer.');
 
-            return $this->redirectToRoute('list_timer');
+            return $this->redirectToRoute('list_timers');
         }
 
-        // Remove Timer in database
+        // Set update date Project
+        $project = $timer->getProject();
+        $project->setUpdatedAt();
+
+        // Remove Timer and update Project in database
+        $this->entityManager->persist($project);
         $this->entityManager->remove($timer);
         $this->entityManager->flush();
 
         // Add message flash
-        $this->addFlash('notification', 'Le timer a bien été supprimer.');
+        $this->addFlash('notification', 'Le timer a bien été supprimé.');
 
-        return $this->redirectToRoute('list_timer');
+        return $this->redirectToRoute('list_timers');
     }
 
     /**
@@ -174,9 +213,9 @@ class TimerController extends AbstractController
         if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
 
             // Add message flash
-            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce Timer.');
+            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce timer.');
 
-            return $this->redirectToRoute('list_timer');
+            return $this->redirectToRoute('list_timers');
         }
 
         // Get Timer started
@@ -185,7 +224,7 @@ class TimerController extends AbstractController
         if ($timer_started) {
 
             // Add message flash
-            $this->addFlash('warning', 'Vous avez déjà un Timer en cours. Arrêtez ou supprimez ce pour pouvoir en lancer un autre.');
+            $this->addFlash('warning', 'Vous avez déjà un timer en cours. Arrêtez-le ou supprimez-le pour pouvoir en lancer un autre.');
 
             // Redirect to Timer started
             return $this->redirectToRoute('show_timer', [
@@ -193,7 +232,7 @@ class TimerController extends AbstractController
             ]);
         }
 
-        // Run Timer
+        // Run Timer and set update date Project
         $timer->run();
 
         // Update Timer in database
@@ -223,12 +262,12 @@ class TimerController extends AbstractController
         if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
 
             // Add message flash
-            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce Timer.');
+            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce timer.');
 
-            return $this->redirectToRoute('list_timer');
+            return $this->redirectToRoute('list_timers');
         }
 
-        // Stop Timer
+        // Stop Timer and set update date Project
         $timer->stop();
 
         // Update Timer in database
@@ -258,12 +297,12 @@ class TimerController extends AbstractController
         if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
 
             // Add message flash
-            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce Timer.');
+            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce timer.');
 
-            return $this->redirectToRoute('list_timer');
+            return $this->redirectToRoute('list_timers');
         }
 
-        // Reset Timer
+        // Reset Timer and set update date Project
         $timer->reset();
 
         // Update Timer in database
@@ -294,16 +333,16 @@ class TimerController extends AbstractController
             // Add message flash
             $this->addFlash('notification', 'Ce timer n’existe pas ou a été supprimé.');
 
-            return $this->redirectToRoute('list_timer');
+            return $this->redirectToRoute('list_timers');
         }
 
         // Check if User logged is not User's Timer
         if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
 
             // Add message flash
-            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce Timer.');
+            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce timer.');
 
-            return $this->redirectToRoute('list_timer');
+            return $this->redirectToRoute('list_timers');
         }
 
         return $this->render('timer/show.html.twig', [

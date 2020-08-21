@@ -6,7 +6,6 @@ use App\Repository\TimerRepository;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -50,6 +49,11 @@ class Timer
     private $end;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="timers")
+     */
+    private $project;
+
+    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="timer")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -76,6 +80,7 @@ class Timer
             date_default_timezone_set("Europe/Paris");
             $this->setStatus(true);
             $this->setStart(new DateTime());
+            $this->getProject()->setUpdatedAt();
         }
     }
 
@@ -88,6 +93,7 @@ class Timer
             date_default_timezone_set("Europe/Paris");
             $this->setStatus(false);
             $this->setEnd(new DateTime());
+            $this->getProject()->setUpdatedAt();
         }
     }
 
@@ -97,9 +103,11 @@ class Timer
     public function reset()
     {
         if(!empty($this->start)) {
+            date_default_timezone_set("Europe/Paris");
             $this->setStatus(false);
             $this->setStart(null);
             $this->setEnd(null);
+            $this->getProject()->setUpdatedAt();
         }
     }
 
@@ -253,11 +261,20 @@ class Timer
         return $this;
     }
 
+    /**
+     * Get Timer name
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * Set Timer name
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -265,14 +282,44 @@ class Timer
         return $this;
     }
 
+    /**
+     * Get Timer description
+     * @return string|null
+     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    /**
+     * Set Timer description
+     * @param string|null $description
+     * @return $this
+     */
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get Project Timer
+     * @return Project|null
+     */
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    /**
+     * Set Project Timer
+     * @param Project|null $project
+     * @return $this
+     */
+    public function setProject(?Project $project): self
+    {
+        $this->project = $project;
 
         return $this;
     }
