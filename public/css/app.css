@@ -83,4 +83,9 @@ html {
 .timer {
     font-family: 'digitalism', sans-serif;
     font-size: 300%;
+    width: 200px;
+    height: 70px;
+}
+.timer > div > div {
+    margin-left: 5px;
 }
