@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Project;
 use App\Entity\Team;
+use App\Form\ProjectTeamType;
 use App\Form\TeamType;
 use App\Form\UpdateTeamType;
+use App\Repository\ProjectRepository;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,14 +21,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class TeamController extends AbstractController
 {
 
+    private $projectRepository;
+
     private $teamRepository;
 
     private $userRepository;
 
     private $entityManager;
 
-    public function __construct(TeamRepository $teamRepository, UserRepository $userRepository, EntityManagerInterface $entityManager)
+    public function __construct(ProjectRepository $projectRepository, TeamRepository $teamRepository, UserRepository $userRepository, EntityManagerInterface $entityManager)
     {
+        $this->projectRepository = $projectRepository;
         $this->teamRepository = $teamRepository;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
@@ -33,7 +39,7 @@ class TeamController extends AbstractController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/team", name="list_teams")
+     * @Route("/teams", name="list_teams")
      * @return Response
      */
     public function list()
@@ -71,14 +77,10 @@ class TeamController extends AbstractController
             $this->entityManager->flush();
 
             // Add message flash
-            $this->addFlash('notification', 'Le groupe a bien été créer.');
-
-            // Get Team created
-            $name = $form->get("name")->getData();
-            $new_team = $this->teamRepository->findOneBy(['name' => $name]);
+            $this->addFlash('notification', 'Le groupe a bien été créé.');
 
             return $this->redirectToRoute('add_user_team', [
-                'id' => $new_team->getId()
+                'id' => $team->getId()
             ]);
         }
 
@@ -163,6 +165,7 @@ class TeamController extends AbstractController
         return $this->redirectToRoute('list_teams');
     }
 
+
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/team/{id}", name="show_team")
@@ -175,7 +178,8 @@ class TeamController extends AbstractController
         $team = $this->teamRepository->find($id);
 
         return $this->render('team/view.html.twig', [
-            'team' => $team
+            'team' => $team,
+            'projects' => $team->getProjects()
         ]);
     }
 }

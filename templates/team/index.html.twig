@@ -10,101 +10,50 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Team View</li>
+                        <li class="breadcrumb-item active" aria-current="page">Project View</li>
                     </ol>
                 </nav>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xl-9 col-lg-10 col-md-11 ">
-                <div class="container">
-                    <div class="row ml-md-2">
-                        <div class="col-12 d-flex mb-0">
-                            <h4> Name</h4>
-                            <span class="ml-auto">Disband</span>
+        {% for team in teams %}
+            <div class="row">
+                <div class="col-xl-9 col-lg-10 col-md-11 ">
+                    <div class="container">
+                        <div class="row ml-md-2">
+                            <div class="col-12 d-flex mb-0">
+                                <h4>{{ team.name }}</h4>
+                                <span class="ml-auto">
+                                <a href="{{ path('update_team', {id: team.id}) }}">Modifier</a>
+                            </span>
+                            </div>
+                            {% for project in team.projects %}
+                                <div class="col-12 ml-2"> Project : <a href="{{ path('show_project', {id: project.id}) }}">{{ project.name }}</a></div>
+                                <div class="ml-3 mt-3 col-12">
+                                    {% for user in project.team.users %}
+                                        <div class="col-12 d-flex">
+                                            {% if user.id == project.leader.id %}
+                                                <div> Chef de Projet :  {{ project.leader.pseudo }}</div>
+                                            {% endif %}
+                                        </div>
+                                        {% if user.id != project.leader.id %}
+                                            <div class="col-12 d-flex">
+                                                <div>{{ user.lastname }} {{ user.firstname }} ({{ user.pseudo }})</div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="ml-3 mt-3 col-12">
+                                    Date de création: {{ team.createdAt | date('d M Y') }}
+                                </div>
+                            {% endfor %}
                         </div>
-                        <div class="col-12 ml-2"> Project : Projet Timer</div>
+                        <div class="row ml-md-2 my-3">
 
-                        <div class="ml-3 mt-3 col-12">
-                            <div class="col-12 d-flex">
-                                <div> Chef de Projet : bipbipbip</div>
-                                <span class="ml-auto">Modifier</span>
-                            </div>
-                            <div class="col-12 d-flex">
-                                <div> Utilisateur 1</div>
-                                <div class="ml-auto">
-                                    <span>Suprimer</span> /
-                                    <span >Modifier</span>
-                                </div>
-                            </div>
-                            <div class="col-12 d-flex">
-                                <div> Utilisateur 1</div>
-                                <div class="ml-auto">
-                                    <span>Suprimer</span> /
-                                    <span >Modifier</span>
-                                </div>
-                            </div>
-                            <div class="col-12 d-flex">
-                                <div> Utilisateur 1</div>
-                                <div class="ml-auto">
-                                    <span>Suprimer</span> /
-                                    <span >Modifier</span>
-                                </div>
-                            </div>
-                            <div class="col-12 d-flex">
-                                <div> Ajout d'un utilisateur 1</div>
-                            </div>
                         </div>
-                    </div>
-                    <div class="row ml-md-2 my-3">
                     </div>
                 </div>
             </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-xl-9 col-lg-10 col-md-11 ">
-                <div class="container">
-                    <div class="row ml-md-2">
-                        <div class="col-12 d-flex mb-0">
-                            <h4> Name</h4>
-                            <span class="ml-auto">Disband</span>
-                        </div>
-                        <div class="col-12 ml-2"> Project : Projet Timer</div>
-
-                        <div class="ml-3 mt-3 col-12">
-                            <div class="col-12 d-flex">
-                                <div> Chef de Projet : bipbipbip</div>
-                                <span class="ml-auto">Modifier</span>
-                            </div>
-                            <div class="col-12 d-flex">
-                                <div> Utilisateur 1</div>
-                                <div class="ml-auto">
-                                    <span>Suprimer</span> /
-                                    <span >Modifier</span>
-                                </div>
-                            </div>
-                            <div class="col-12 d-flex">
-                                <div> Utilisateur 1</div>
-                                <div class="ml-auto">
-                                    <span>Suprimer</span> /
-                                    <span >Modifier</span>
-                                </div>
-                            </div>
-                            <div class="col-12 d-flex">
-                                <div> Utilisateur 1</div>
-                                <div class="ml-auto">
-                                    <span>Suprimer</span> /
-                                    <span >Modifier</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row ml-md-2 my-3">
-                    </div>
-                </div>
-            </div>
-        </div>
-
+            <hr>
+        {% endfor %}
     </div>
 {% endblock %}

@@ -17,32 +17,12 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>{% if app.request.get('_route') == 'update_team' %}
-            Modifier l'{% else %}Ajouter une
-        {% endif %}équipe</h1>
+    <h1>{% if app.request.get('_route') == 'update_project' %}
+        Modifier le
+        {% else %}
+        Ajouter un
+        {% endif %} projet</h1>
 
-    {{ form_start(form) }}
-
-    {{ form_label(form.name, 'Nom du groupe', {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.name, {'attr': {'class': 'form-input'}}) }}
-    <div class="form-error">{{ form_errors(form.name) }}</div>
-    <br />
-    <br />
-    {% if team is defined %}
-        {% for user in team.users %}
-            {% if team.createdBy.id is same as (user.id) %}
-                - {{ user.name }} : {{ user.pseudo}} (admin)<br />
-            {% else %}
-                - {{ user.name }} : {{ user.pseudo}}
-                <a style="color: red" href="{{ path('delete_user_team', {team_id: team.id, user_id: user.id}) }}">supprimer</a>
-                <br />
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-    <br />
-    <br />
-
-    {{ form_widget(form.submit, { 'label': 'Valider', 'attr': {'class': 'btn-sub'} }) }}
-    {{ form_end(form) }}
+    {{ form(form) }}
 </div>
 {% endblock %}
