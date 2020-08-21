@@ -59,6 +59,8 @@ class Project
 
     public function __construct()
     {
+        date_default_timezone_set('Europe/Paris');
+        $this->updatedAt = new \DateTime();
         $this->createdAt = new \DateTime();
     }
 
@@ -201,12 +203,12 @@ class Project
 
     /**
      * Set last update date
-     * @param \DateTimeInterface|null $updatedAt
      * @return $this
      */
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $updatedAt;
+        date_default_timezone_set('Europe/Paris');
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }

@@ -114,6 +114,7 @@ class ProjectController extends AbstractController
      */
     public function update(Request $request, int $id)
     {
+
         // Get Project and Team
         $project = $this->projectRepository->find($id);
 
@@ -133,8 +134,7 @@ class ProjectController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Set time updatedAt
-            date_default_timezone_set('Europe/Paris');
-            $project->setUpdatedAt(new \DateTime());
+            $project->setUpdatedAt();
 
             // Update Project in database
             $this->entityManager->persist($project);
