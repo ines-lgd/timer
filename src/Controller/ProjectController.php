@@ -114,7 +114,6 @@ class ProjectController extends AbstractController
      */
     public function update(Request $request, int $id)
     {
-
         // Get Project and Team
         $project = $this->projectRepository->find($id);
 
