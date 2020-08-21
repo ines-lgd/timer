@@ -23,8 +23,8 @@
                             <div class="col-12 d-flex mb-0">
                                 <h4>{{ team.name }}</h4>
                                 <span class="ml-auto">
-                                <a href="{{ path('update_team', {id: team.id}) }}">Modifier</a>
-                            </span>
+                                    <a href="{{ path('update_team', {id: team.id}) }}">Modifier</a>
+                                </span>
                             </div>
                             {% for project in team.projects %}
                                 <div class="col-12 ml-2"> Project : <a href="{{ path('show_project', {id: project.id}) }}">{{ project.name }}</a></div>

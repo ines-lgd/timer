@@ -1,3 +1,12 @@
+@font-face {
+    font-family: 'digitalism';
+    src: url('../font/digitalism.ttf') format('ttf'),
+    url('../font/digitalism-webfont.woff2') format('woff2'),
+    url('../font/digitalism-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
 html {
     background-color: #064872;
 }
@@ -69,4 +78,9 @@ html {
     width: 100%;
     border-bottom: white 1px solid;
     padding-bottom: 5px;
+}
+
+.timer {
+    font-family: 'digitalism', sans-serif;
+    font-size: 300%;
 }
