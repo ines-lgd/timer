@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Project;
+use App\Entity\Team;
+use App\Entity\Timer;
 use App\Repository\ProjectRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TimerRepository;
@@ -38,36 +41,64 @@ class HomeController extends AbstractController
      */
     public function index()
     {
-        $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
+        if ($this->getUser()) {
 
-        $count_teams = $user->getTeams()->count();
+            $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
 
-        $last_team = $this->teamRepository->findOneBy(['createdBy' => $user->getId()], ['createdAt' => 'DESC']);
+            $count_teams = $user->getTeams()->count();
 
-        $projects = [];
+            $last_team = $this->teamRepository->findOneBy(['createdBy' => $user->getId()], ['createdAt' => 'DESC']);
 
-        foreach ($user->getTeams() as $team) {
-            foreach ($team->getProjects() as $project) {
-                array_push($projects, $project);
+            if(!$last_team) {
+
+                $last_team = new Team();
             }
+
+            $projects = [];
+
+            foreach ($user->getTeams() as $team) {
+
+                foreach ($team->getProjects() as $project) {
+
+                    array_push($projects, $project);
+                }
+            }
+
+            $count_projects = count($projects);
+
+            $last_timer = $this->timerRepository->findOneBy(['user' => $user->getId()], ['start' => 'DESC']);
+
+            $count_timers = 0;
+
+            if ($last_timer) {
+
+                $last_project = $last_timer->getProject();
+
+                foreach ($user->getTimers() as $timer) {
+
+                    if ($timer->getTime() !== "") {
+
+                        $count_timers += strtotime($timer->getTime());
+                    }
+                }
+
+            } else {
+
+                $last_project = new Project();
+                $last_timer = new Timer();
+                $count_timers = strtotime(0);
+            }
+
+            return $this->render('home/index.html.twig', [
+                'count_teams' => $count_teams,
+                'last_team' => $last_team,
+                'count_projects' => $count_projects,
+                'last_project' => $last_project,
+                'count_timers' => $count_timers,
+                'last_timer' => $last_timer
+            ]);
         }
 
-        $count_projects = count($projects);
-
-        $last_timer = $this->timerRepository->findOneBy(['user' => $user->getId()], ['createdAt', 'DESC']);
-
-        $last_project = $last_timer->getProject();
-
-        $count_timers = null;
-
-        foreach ($user->getTimers() as $timer) {
-            $count_timers += $timer->getTime();
-        }
-
-
-        return $this->render('home/index.html.twig', [
-            'count_teams' => $count_teams,
-            'last_team' => $last_team,
-        ]);
+        return $this->render('home/index.html.twig');
     }
 }

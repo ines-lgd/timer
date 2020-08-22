@@ -134,7 +134,9 @@ class TimerController extends AbstractController
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas modifier ce timer.');
 
-            return $this->redirectToRoute('list_timers');
+            return $this->redirectToRoute('list_timers', [
+                'id' => $timer->getProject()->getId()
+            ]);
         }
 
         // Get form data
@@ -180,7 +182,9 @@ class TimerController extends AbstractController
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas supprimer ce Timer.');
 
-            return $this->redirectToRoute('list_timers');
+            return $this->redirectToRoute('list_timers', [
+                'id' => $timer->getProject()->getId()
+            ]);
         }
 
         // Set update date Project
@@ -195,7 +199,9 @@ class TimerController extends AbstractController
         // Add message flash
         $this->addFlash('notification', 'Le timer a bien été supprimé.');
 
-        return $this->redirectToRoute('list_timers');
+        return $this->redirectToRoute('list_timers', [
+            'id' => $timer->getProject()->getId()
+        ]);
     }
 
     /**
@@ -215,7 +221,9 @@ class TimerController extends AbstractController
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce timer.');
 
-            return $this->redirectToRoute('list_timers');
+            return $this->redirectToRoute('list_timers', [
+                'id' => $timer->getProject()->getId()
+            ]);
         }
 
         // Get Timer started
@@ -264,7 +272,9 @@ class TimerController extends AbstractController
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce timer.');
 
-            return $this->redirectToRoute('list_timers');
+            return $this->redirectToRoute('list_timers', [
+                'id' => $timer->getProject()->getId()
+            ]);
         }
 
         // Stop Timer and set update date Project
@@ -299,7 +309,9 @@ class TimerController extends AbstractController
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce timer.');
 
-            return $this->redirectToRoute('list_timers');
+            return $this->redirectToRoute('list_timers', [
+                'id' => $timer->getProject()->getId()
+            ]);
         }
 
         // Reset Timer and set update date Project
@@ -333,7 +345,7 @@ class TimerController extends AbstractController
             // Add message flash
             $this->addFlash('notification', 'Ce timer n’existe pas ou a été supprimé.');
 
-            return $this->redirectToRoute('list_timers');
+            return $this->redirectToRoute('list_user_timers');
         }
 
         // Check if User logged is not User's Timer
