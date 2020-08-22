@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -38,9 +39,19 @@ class Project
     private $description;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $leader;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Team::class, inversedBy="projects")
      */
     private $team;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Timer::class, mappedBy="project")
+     */
+    private $timers;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
@@ -48,26 +59,22 @@ class Project
     private $createdBy;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    private $leader;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
-
-    public function __construct()
-    {
-        date_default_timezone_set('Europe/Paris');
-        $this->updatedAt = new \DateTime();
-        $this->createdAt = new \DateTime();
-    }
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    public function __construct()
+    {
+        date_default_timezone_set('Europe/Paris');
+        $this->updatedAt = new DateTime();
+        $this->createdAt = new DateTime();
+        $this->timers = new ArrayCollection();
+    }
 
     /**
      * Get id Project
@@ -194,9 +201,9 @@ class Project
 
     /**
      * Get last update date
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
@@ -208,7 +215,48 @@ class Project
     public function setUpdatedAt(): self
     {
         date_default_timezone_set('Europe/Paris');
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = new DateTime();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Timer[]
+     */
+    public function getTimers(): Collection
+    {
+        return $this->timers;
+    }
+
+    /**
+     * Add new Timer in Project
+     * @param Timer $timer
+     * @return $this
+     */
+    public function addTimer(Timer $timer): self
+    {
+        if (!$this->timers->contains($timer)) {
+            $this->timers[] = $timer;
+            $timer->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove Timer in Project
+     * @param Timer $timer
+     * @return $this
+     */
+    public function removeTimer(Timer $timer): self
+    {
+        if ($this->timers->contains($timer)) {
+            $this->timers->removeElement($timer);
+            // set the owning side to null (unless already changed)
+            if ($timer->getProject() === $this) {
+                $timer->setProject(null);
+            }
+        }
 
         return $this;
     }

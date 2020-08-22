@@ -10,8 +10,9 @@
 
 <div class="example-wrapper">
     <h1>Timers</h1>
-
-    <a href="{{ path('add_timer') }}">Ajouter un Timer</a>
+    {% if app.request.get('_route') == 'list_timers' %}
+        <a href="{{ path('add_timer', {id: project_id}) }}">Ajouter un Timer</a>
+    {% endif %}
 
     {% for timer in timers %}
         <a href="{{ path('show_timer', {id: timer.id}) }}">{{ timer.name }}</a> <br />

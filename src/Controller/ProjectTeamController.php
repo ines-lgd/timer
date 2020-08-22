@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Team;
 use App\Entity\Project;
 use App\Form\ProjectTeamType;
 use App\Repository\TeamRepository;
@@ -11,7 +10,6 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,17 +22,22 @@ class ProjectTeamController extends AbstractController
     private $userRepository;
 
     private $entityManager;
+
     private $projectRepository;
 
-    public function __construct(TeamRepository $teamRepository, UserRepository $userRepository, ProjectRepository $projectRepository, EntityManagerInterface $entityManager)
+    public function __construct
+    (
+        TeamRepository $teamRepository,
+        UserRepository $userRepository,
+        ProjectRepository $projectRepository,
+        EntityManagerInterface $entityManager
+    )
     {
         $this->teamRepository = $teamRepository;
         $this->userRepository = $userRepository;
         $this->projectRepository = $projectRepository;
         $this->entityManager = $entityManager;
     }
-
-
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
@@ -46,7 +49,7 @@ class ProjectTeamController extends AbstractController
     public function addProject(Request $request, int $id)
     {
         // Get Team
-        $team = $this->teamRepository->findOneBy(['id' => $id]);
+        $team = $this->teamRepository->find($id);
 
         // Get User logged
         $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
@@ -61,7 +64,9 @@ class ProjectTeamController extends AbstractController
             // Add message Flash
             $this->addFlash('warning', 'Vous ne pouvez ajouter de projet à ce groupe.');
 
-            return $this->redirectToRoute('list_projects');
+            return $this->redirectToRoute('show_team', [
+                'id' => $id
+            ]);
         }
 
         // Get form data
@@ -90,26 +95,5 @@ class ProjectTeamController extends AbstractController
             'team' => $team,
             'form' => $form->createView()
         ]);
-    }
-
-    /**
-     * @param Team $team
-     * @return Project[]
-     */
-    public function getProjects(Team $team) {
-
-        // Get all Projects
-        $projects = $this->projectRepository->findAll();
-
-        // Filtre Projects list
-        foreach ($projects as $key => $project) {
-
-            // Remove Project already in Team
-            if (in_array($project, $team->getProjects()->toArray())) {
-                unset($projects[$key]);
-            }
-        }
-
-        return $projects;
     }
 }
