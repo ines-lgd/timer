@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}- Equipes{% endblock %}
+{% block title %}- Équipes{% endblock %}
 
 {% block body %}
     <div class="container">
         <div class="row ">
-            <h1 class="col-6 mt-5"> Vos Equipes</h1>
+            <h1 class="col-6 mt-5"> Vos Équipes</h1>
 
             <div class="col-md-2 ml-auto mt-5">
                 <a href="{{ path('add_team') }}" class="btn btn-primary btn-circle my-1 position-relative">Créer une équipe</a>
@@ -17,7 +17,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Vos Equipes</li>
+                        <li class="breadcrumb-item active" aria-current="page">Vos Équipes</li>
                     </ol>
                 </nav>
             </div>
@@ -62,12 +62,11 @@
                                     Date de création: {{ team.createdAt | date('d M Y') }}
                                 </div>
                                 <div class="col-md-12 font-size-3">Créé par : {{ team.createdBy.pseudo }} • Nombre d'utilisateurs : {{ team.users.count }} • Nombre de projets : {{ team.projects.count }}</div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
             </div>
         {% endfor %}
-
     </div>
 {% endblock %}
