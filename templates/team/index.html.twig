@@ -1,22 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}- Team{% endblock %}
+{% block title %}- Equipes{% endblock %}
 
 {% block body %}
     <div class="container">
-        <div class="row">
-            <h1 class="col-12 mt-5"> Team View</h1>
+        <div class="row ">
+            <h1 class="col-6 mt-5"> Vos Equipes</h1>
+
+            <div class="col-md-2 ml-auto mt-5">
+                <a href="{{ path('add_team') }}" class="btn btn-primary btn-circle my-1 position-relative">Créer une équipe</a>
+            </div>
+            <div class="col-md-2 ml-auto mt-5">
+
+            </div>
             <div class="col-xl-9 col-lg-10 col-md-11 col-12 my-5">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Project View</li>
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Vos Equipes</li>
                     </ol>
                 </nav>
             </div>
         </div>
+        {% if teams is empty %}
+            <div class="row my-4">
+                <div class="col-md-2 mt-5">
+                    <a href="{{ path('add_team') }}" class="btn btn-primary btn-circle my-1 position-relative">Créer une équipe</a>
+                </div>
+            </div>
+            <div class="row ">
+          </div>
+        {% endif %}
         {% for team in teams %}
-            <div class="row">
+            <div class="row my-4">
                 <div class="col-xl-9 col-lg-10 col-md-11 ">
                     <div class="container">
                         <div class="row ml-md-2">
@@ -45,15 +61,13 @@
                                 <div class="ml-3 mt-3 col-12">
                                     Date de création: {{ team.createdAt | date('d M Y') }}
                                 </div>
-                            {% endfor %}
-                        </div>
-                        <div class="row ml-md-2 my-3">
-
+                                <div class="col-md-12 font-size-3">Créé par : {{ team.createdBy.pseudo }} • Nombre d'utilisateurs : {{ team.users.count }} • Nombre de projets : {{ team.projects.count }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <hr>
         {% endfor %}
+
     </div>
 {% endblock %}
