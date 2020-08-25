@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProjectController!{% endblock %}
+{% block title %}- Equipes{% endblock %}
 
 {% block body %}
     <head>
@@ -11,38 +11,78 @@
         <script src="{{ asset('js/team.js') }}" type="text/javascript"></script>
     </head>
 
-    <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>{% if app.request.get('_route') == 'update_team' %}
-            Modifier l'{% else %}Ajouter une
-        {% endif %}équipe</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 my-5">
+                <h1>{% if app.request.get('_route') == 'update_team' %}
+                    Modifier l'{% else %}Créer une
+                {% endif %}équipe</h1>
+            </div>
+            <div class="col-md-12">
 
-    {{ form_start(form) }}
+                {{ form_start(form) }}
 
-    {{ form_label(form.name, 'Nom du groupe', {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.name, {'attr': {'class': 'form-input'}}) }}
-    <div class="form-error">{{ form_errors(form.name) }}</div>
-    <br />
-    <br />
-    {% if team is defined %}
-        {% for user in team.users %}
-            {% if team.createdBy.id is same as (user.id) %}
-                - {{ user.name }} : {{ user.pseudo}} (admin)<br />
-            {% else %}
-                - {{ user.name }} : {{ user.pseudo}}
-                <a style="color: red" href="{{ path('delete_user_team', {team_id: team.id, user_id: user.id}) }}">supprimer</a>
-                <br />
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-    <br />
-    <br />
+                <div class="row flex form-ul-style">
+                    <div class="col-md-6 my-3">
+                        {{ form_label(form.name, 'Nom du groupe : ', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-input form-control col-md-12'}}) }}
+                        {{ form_errors(form.name, {'attr': {'class': 'col-md-12 '}}) }}
+                    </div>
+                    <div class="col-md-6 my-5 ">
+                        {{ form_widget(form.submit, { 'label': 'Valider', 'attr': {'class': 'btn btn-primary'} }) }}
+                    </div>
+                    <div class="col-md-11 my-3">
+                        {% if team is defined %}
 
-    {{ form_widget(form.submit, { 'label': 'Valider', 'attr': {'class': 'btn-sub'} }) }}
-    {{ form_end(form) }}
-</div>
+
+                            <div class="row d-flex">
+                                <div class="col-md-8 my-3"><h4> Liste des membres :</h4></div>
+                            </div>
+                            <table class="table nowrap" id="tableNews">
+                                <thead>
+                                <tr>
+                                    <th>Pseudo</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Admin</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in team.users %}
+                                    <tr>
+                                        <td class="v-align-middle">
+                                            <p class="m-0">{{ user.pseudo }}</p>
+                                        </td>
+                                        <td class="v-align-middle">
+                                            <p class="m-0">{{ user.firstname }}</p>
+                                        </td>
+                                        <td class="v-align-middle">
+                                            <p class="m-0">{{ user.lastname }}</p>
+                                        </td>
+                                        <td class="v-align-middle">
+                                            {% if (team.createdBy.id) is same as (user.id)  %}
+                                                <span class="badge badge-success px-2 py-1">Admin</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="v-align-middle ml-n3">
+                                            {% if (app.user.id)  is same as (team.createdBy.id) %}
+                                                <div class="btn btn-danger">
+                                                    <a href="{{ path('delete_user_team', {team_id: team.id, user_id: user.id}) }}">Ssupprimer</a>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        {% endif %}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
