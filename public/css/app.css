@@ -88,7 +88,12 @@ body {
     padding-bottom: 5px;
 }
 
+.table a.font-weight-bold {
+    color: #63aeff;
+}
+
 .timer {
+    color: var(--white);
     font-family: 'digitalism', sans-serif;
     font-size: 300%;
     text-shadow: 0 0 1.5px currentColor;
@@ -99,7 +104,7 @@ body {
     background: -moz-radial-gradient(ellipse, rgba(30,30,30,1) 50%, rgba(0,0,0,1) 100%);
     background: -webkit-radial-gradient(ellipse, rgba(30,30,30,1) 50%, rgba(0,0,0,1) 100%);
     background: radial-gradient(ellipse, rgba(30,30,30,1) 50%, rgba(0,0,0,1) 100%);
-
+    box-shadow: 0 0 20px 0px #111a;
 }
 .timer > div > div {
     width: 285px;

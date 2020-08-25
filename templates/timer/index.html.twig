@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}- Timer Dashboard{% endblock %}
+{% block title %}- Historique{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -28,7 +28,7 @@
                 <th scope="col">Créé par</th>
                 <th scope="col">Date de création</th>
                 <th scope="col">Statut</th>
-                <th scope="col">Mettre à jour</th>
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -37,7 +37,7 @@
                 <td><a class="font-weight-bold" href="{{ path('show_timer', {id: timer.id}) }}">{{ timer.name }}</a></td>
                 <td>
                     {% if timer.end is not empty %}
-                        {{ timer.getTime | date('H:i:s') }}
+                        {{ timer.getTime | date('H\\h i\\m s\\s') }}
                     {% endif %}
                 </td>
                 <td>{{ timer.user.pseudo }}</td>
@@ -53,10 +53,10 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a class="btn-secondary btn-sm" role="button" href="{{ path('update_timer', {id: timer.id}) }}">
+                    <a class="btn-secondary btn-sm ml-1" role="button" href="{{ path('update_timer', {id: timer.id}) }}">
                         <i class="far fa-edit"></i>
                     </a>
-                    <a class="btn-danger btn-sm" role="button" href="{{ path('remove_timer', {id: timer.id}) }}">
+                    <a class="btn-danger btn-sm ml-1" role="button" href="{{ path('remove_timer', {id: timer.id}) }}">
                         <i class="far fa-trash-alt"></i>
                     </a>
                 </td>
