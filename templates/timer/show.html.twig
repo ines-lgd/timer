@@ -14,80 +14,67 @@
                     <div class="col-12 d-flex mb-0">
                         <h4>{{ timer.name }}</h4>
                         <span class="ml-auto">
-                            <a href="{{ path('update_timer', {id: timer.id}) }}">Modifier</a>
+                            <a class="btn btn-success my-1 position-relative" role="button" href="{{ path('update_timer', {id: timer.id}) }}">
+                                <i class="far fa-edit"></i>
+                            </a>
+                            <a class="btn btn-danger my-1 position-relative" role="button" href="{{ path('remove_timer', {id: timer.id}) }}">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
                         </span>
                     </div>
-                    <div class="col-12 ml-2"> Description : {{ timer.description }}</div>
-                    <div class="col-12 ml-2"> Statut : {{ timer.getStatusToString }}</div>
+                    <div class="col-12 ml-2"> Créé le {{ timer.createdAt | date('d/m/Y') }} par {{ timer.user.username }}</div>
 
                     {% if timer.end is not empty %}
                     <div class="col-12 ml-2">
                         Temps : {{ timer.getTime }}
                     </div>
                     {% endif %}
-                    <div class="col-12 ml-2 d-flex justify-content-center timer">
-                        <div class="col-4">
-                        <div id="timer" data-status="{{ timer.getStatusToString }}" data-timer="{{ timer.start | json_encode() }}"></div>
+                    <div class="col-11 col-lg-8 d-flex mx-auto my-5 p-4 timer">
+                        <div class="d-flex flex-column align-self-center btn-timer">
+                            {% if timer.getStatusToString == 'PRÊT' %}
+                                <a class="text-primary btn" role="button" href="{{ path('run_timer', {id: timer.id}) }}">
+                                    <i class="fas fa-play"></i>
+                                </a>
+                            {% elseif timer.getStatusToString == 'EN COURS' %}
+                                <a class="text-danger" role="button" href="{{ path('stop_timer', {id: timer.id}) }}">
+                                    <i class="fas fa-stop"></i>
+                                </a>
+                            {% endif %}
+                            {% if timer.start is not null and timer.end is null %}
+                                <a class="text-secondary" role="button" href="{{ path('reset_timer', {id: timer.id}) }}">
+                                    <i class="fas fa-redo-alt"></i>
+                                </a>
+                            {% endif %}
                         </div>
-                    </div>
-                    <div class="col-12 ml-2 d-flex justify-content-around">
+                        {% if timer.getStatusToString == 'EN COURS' %}
+                            <div class="d-flex align-items-center">
+                                <div id="timer" data-status="{{ timer.getStatusToString }}" data-timer="{{ timer.start | json_encode() }}"></div>
+                            </div>
+                        {% endif %}
                         {% if timer.getStatusToString == 'PRÊT' %}
-                            <a class="btn btn-primary" role="button" href="{{ path('run_timer', {id: timer.id}) }}">▶ Lancer</a>
-                        {% elseif timer.getStatusToString == 'EN COURS'%}
-                            <a class="btn btn-danger" role="button" href="{{ path('stop_timer', {id: timer.id}) }}">⏹ Arrêter</a>
+                            <div class="d-flex align-self-center ml-auto caption">
+                                PRET
+                            </div>
+                        {% elseif timer.getStatusToString == 'TERMINÉ' %}
+                            <div class="d-flex align-self-center ml-auto caption">
+                                TERMINE
+                            </div>
+                        {% else %}
+                            <div class="d-flex align-self-end ml-auto caption">
+                                {{ timer.getStatusToString }}
+                            </div>
                         {% endif %}
-                        {% if timer.start is not null and timer.end is null %}
-                            <a class="btn btn-secondary" role="button" href="{{ path('reset_timer', {id: timer.id}) }}">🔚 Annuler</a>
-                        {% endif %}
-                    </div>
                     </div>
                     <div class="ml-3 mt-3 col-12">
-                        Créé le {{ timer.createdAt | date('d M Y') }} par {{ timer.user.username }}
-                        <div>
-                            <a class="text-danger" href="{{ path('remove_timer', {id: timer.id}) }}">Supprimer</a>
+                        Description :
+                        <div class="ml-3">
+                            {{ timer.description }}
                         </div>
                     </div>
-                </div>
-                <div class="row ml-md-2 my-3">
-
                 </div>
             </div>
         </div>
     </div>
     <hr>
-</div>
-{#
-    <h2>Nom : {{ timer.name }}</h2>
-
-    <a href="{{ path('update_timer', {id: timer.id}) }}">Modifier</a> /
-    <a href="{{ path('remove_timer', {id: timer.id}) }}">Supprimer</a>
-
-    <div>Statut {{ timer.getStatusToString }}</div>
-
-    {% if timer.getStatusToString == 'PRÊT' %}
-        <a href="{{ path('run_timer', {id: timer.id}) }}">Lancer le timer</a> /
-    {% elseif timer.getStatusToString == 'EN COURS'%}
-        <a href="{{ path('stop_timer', {id: timer.id}) }}">Arrêter le timer</a> /
-    {% endif %}
-    {% if timer.start is not null and timer.end is null %}
-        <a href="{{ path('reset_timer', {id: timer.id}) }}">Annuler le timer</a>
-    {% endif %}
-
-    {% if timer.end is not empty %}
-        <div>Temps : {{ timer.getTime }}</div>
-    {% endif %}
-    <div id="timer" data-status="{{ timer.getStatusToString }}" data-timer="{{ timer.start | json_encode() }}"></div>
-
-    <div>Réalisé par : {{ timer.user.username }}</div>
-
-    <div>Date de création : {{ timer.createdAt | date('d M Y') }}</div>
-
-    <br />
-    <div>
-        Description : <br />
-        {{ timer.description }}
-    </div>
-    <br />
-    <br />
-    <br />#}
+</div
 {% endblock %}
