@@ -17,9 +17,9 @@
                             <a class="btn btn-success my-1 position-relative" role="button" href="{{ path('update_timer', {id: timer.id}) }}">
                                 <i class="far fa-edit"></i>
                             </a>
-                            <a class="btn btn-danger my-1 position-relative" role="button" href="{{ path('remove_timer', {id: timer.id}) }}">
+                            <button class="btn btn-danger my-1 position-relative" data-toggle="modal" data-target="#deleteModal">
                                 <i class="fas fa-trash-alt"></i>
-                            </a>
+                            </button>
                         </span>
                     </div>
                     <div class="col-12 ml-2"> Créé le {{ timer.createdAt | date('d/m/Y') }} par {{ timer.user.username }}</div>
@@ -77,3 +77,4 @@
     <hr>
 </div
 {% endblock %}
+{% include "layout/modal.html.twig" %}
