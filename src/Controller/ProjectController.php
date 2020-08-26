@@ -58,55 +58,6 @@ class ProjectController extends AbstractController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
-     * @Route("/project/add", name="add_project")
-     * @param Request $request
-     * @return Response
-     */
-    public function create(Request $request)
-    {
-        // Create Project and get form data
-        $project = new Project();
-
-        // Add Creator and Team
-        $creator = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
-        $project->setCreatedBy($creator);
-
-        // Check User have Team
-        if (empty($creator->getTeams()->toArray())) {
-
-            // Add message flash
-            $this->addFlash('notification', 'Vous n’avez aucun groupe.');
-
-            return $this->redirectToRoute('add_team');
-        }
-
-        $form = $this->createForm(ProjectType::class, $project);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            // Set Creator as Leader
-            $project->setLeader($creator);
-
-            // Add Project in database
-            $this->entityManager->persist($project);
-            $this->entityManager->flush();
-
-            // Add message flash
-            $this->addFlash('notification', 'Le projet a bien été créé.');
-
-            return $this->redirectToRoute('show_project', [
-                'id' => $project->getId()
-            ]);
-        }
-
-        return $this->render('project/form.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @Route("/project/update/{id}", name="update_project")
      * @param Request $request
      * @param int $id
@@ -118,7 +69,8 @@ class ProjectController extends AbstractController
         $project = $this->projectRepository->find($id);
 
         // Check if User is Leader
-        if ($project->getLeader()->getUsername() !== $this->getUser()->getUsername()) {
+        if ($project->getLeader()->getUsername() !== $this->getUser()->getUsername() ||
+            $project->getCreatedBy()->getPseudo() !== $this->getUser()->getUsername()) {
 
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas modifier ce projet.');
@@ -165,7 +117,8 @@ class ProjectController extends AbstractController
         $project = $this->projectRepository->find($id);
 
         // Check if User is Leader Team
-        if ($project->getLeader()->getPseudo() !== $this->getUser()->getUsername()) {
+        if ($project->getLeader()->getPseudo() !== $this->getUser()->getUsername() ||
+            $project->getCreatedBy()->getPseudo() !== $this->getUser()->getUsername()) {
 
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas supprimer ce projet.');
@@ -202,8 +155,29 @@ class ProjectController extends AbstractController
             return $this->redirectToRoute('list_projects');
         }
 
+        // Get Team Project and User logged
+        $team = $project->getTeam();
+        $user = $this->userRepository->findOneBy(['pseudo' => $this->getUser()->getUsername()]);
+
+        if(!in_array($user, $team->getUsers()->toArray())) {
+
+            //Add message flash
+            $this->addFlash('warning', 'Vous ne pouvez pas accéder a ce projet.');
+
+            return $this->redirectToRoute('list_projects');
+        }
+
+        $time = 0;
+
+        foreach ($project->getTimers() as $timer) {
+            if ($timer->getEnd()) {
+                $time += strtotime($timer->getTime());
+            }
+        }
+
         return $this->render('project/view.html.twig', [
-            'project' => $project
+            'project' => $project,
+            'time' => $time
         ]);
     }
 }

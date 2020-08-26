@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-12 ">
                 <h1>Application Timer</h1>
-                <p class="pt-3">Bienvenue sur notre application Timer, pour vous aider à recenser le temps de travail passé sur vos projets.</p>
+                <p class="pt-3">Bienvenue sur notre application Timer, pour vous aider à recenser votre temps de travail passé sur vos projets.</p>
             </div>
         </div>
 
@@ -17,7 +17,13 @@
                 <a href="{{ path('list_teams') }}"><img src="{{ asset('img/team.jpg') }}" alt="photo team" class=" img-fluid my-2"></a>
                 {% if app.user %}
                     <div class="my-3">Nombre d'équipes : {{ count_teams }}</div>
-                    <div class="my-3">Dernière équipe : {{ last_team.name is empty or last_team.name ? "Aucune" }}</div>
+                    <div class="my-3">Dernière équipe ajouté :
+                        {% if last_team is not null and last_team.id is not empty %}
+                            <a href="{{ path('show_team', {id: last_team.id}) }}"> {{ last_team.name }} </a>
+                        {% else %}
+                            Aucune
+                        {% endif %}
+                    </div>
                 {% endif %}
             </div>
             <div class="col-md-4 my-4">
@@ -25,7 +31,13 @@
                 <a href="{{ path('list_projects') }}"><img src="{{ asset('img/project.jpg') }}" alt="photo project" class="img-fluid my-2"></a>
                 {% if app.user %}
                     <div class="my-3">Nombre de projets : {{ count_projects }}</div>
-                    <div class="my-3">Dernier projet : {{ last_project.name is empty or last_team.name ? "Aucun" }}</div>
+                    <div class="my-3">Dernier projet travaillé :
+                        {% if last_project is not null and last_project.id is not empty %}
+                            <a href="{{ path('show_project', {id: last_project.id}) }}"> {{ last_project.name }} </a>
+                        {% else %}
+                            Aucun
+                        {% endif %}
+                    </div>
                 {% endif %}
             </div>
             <div class="col-md-4 my-4">

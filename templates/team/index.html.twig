@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row ">
             <h1 class="col-6 mt-5"> Vos Équipes</h1>
-            <div class="col-md-2 ml-auto mt-5">
+            <div class="col-md-2 ml-auto my-5">
                 <a href="{{ path('add_team') }}" class="btn btn-primary btn-circle my-1 position-relative">Créer une équipe</a>
             </div>
             <div class="col-md-2 ml-auto my-5"></div>
@@ -37,14 +37,16 @@
                                 <div class="col-md-12 d-flex">
                                     <h2 class="my-3"><a href="{{ path('show_team', {id: team.id }) }}">{{ team.name }}</a></h2>
                                     {% if (team.createdBy.id) is same as (app.user.id)  %}
-                                        <div class="ml-auto align-self-center d-flex">
-                                            <a href="{{ path('update_team', {id: team.id}) }}" class="btn btn-success btn-circle my-3 position-relative">Modifier</a>
+                                        <div class="ml-auto align-self-end d-flex">
+                                            <a href="{{ path('update_team', {id: team.id}) }}" class="btn btn-success btn-circle position-relative">
+                                                <i class="far fa-edit"></i>
+                                            </a>
                                         </div>
                                     {% endif %}
 
                                 </div>
                                 <div class="col-md-12 font-size-3">Créé par : {{ team.createdBy.pseudo }} • Nombre d'utilisateurs : {{ team.users.count }} • Nombre de projets : {{ team.projects.count }}</div>
-                            {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>

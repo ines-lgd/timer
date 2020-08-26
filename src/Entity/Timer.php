@@ -117,14 +117,14 @@ class Timer
      */
     public function getTime()
     {
-        if (empty($this->start))
+        if (!$this->end)
         {
             return "";
         }
 
-        $time = $this->start->diff($this->end);
+        $time = $this->end->diff($this->start);
 
-        return $time->format('%H:%I:%S');
+        return $time->format('%H:%i:%s');
     }
 
     /**
