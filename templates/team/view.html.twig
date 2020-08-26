@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TeamController!{% endblock %}
+{% block title %}- Equipe{% endblock %}
 
 {% block body %}
 <head>
@@ -18,8 +18,16 @@
                     <a href="{{ path('update_team', {id: team.id }) }}">Modifier le nom du groupe</a>
                 {% endif %}
             </div>
-            <div class="col-md-12 my-5">
-
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('list_teams') }}">Vos Equipes</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ team.name }}</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-md-12 my-4">
                 <div class="row d-flex">
                     <div class="col-md-8 my-3"><h4 >Membres :</h4></div>
                     {% if (app.user.id)  is same as (team.createdBy.id) %}
@@ -69,10 +77,7 @@
                     </tbody>
                 </table>
             </div>
-
-
             <div class="col-md-12 my-5">
-
                 <div class="row d-flex">
                     <div class="col-md-8 my-3"><h4 >Projets :</h4></div>
                     {% if (app.user.id)  is same as (team.createdBy.id) %}
@@ -86,7 +91,7 @@
                     <tr>
                         <th>Projet</th>
                         <th>Date Création</th>
-                        <th>Admin</th>
+                        <th>Chef de Projet</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -100,14 +105,15 @@
                                 <p class="m-0">{{ project.createdAt | date('d M Y') }}</p>
                             </td>
                             <td class="v-align-middle">
-                                {% if (project.createdBy.id) is same as (app.user.id)  %}
-                                    <span class="badge badge-success px-2 py-1">Vous</span>
-                                {% else %}
-                                    <p class="m-0">{{ project.createdBy.pseudo }}</p>
+
+                                <span class="m-0">{{ project.leader.pseudo }}
+                                {% if (project.leader.id) is same as (app.user.id)  %}
+                                   <span class="badge badge-success px-2 py-1">Vous</span>
                                 {% endif %}
+                                </span>
                             </td>
                             <td class="v-align-middle ml-n3">
-                                {% if (app.user.id)  is same as (team.createdBy.id) %}
+                                {% if (app.user.id)  is same as (project.createdBy.id) or  (app.user.id)  is same as (project.leader.id) %}
                                     <div class="btn btn-danger">
                                         <a href="{{ path('remove_project', {id: project.id}) }}">Supprimer</a>
                                     </div>

@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row">
             <h1 class="col-12 mt-5"> Vos Projets</h1>
-            <div class="col-xl-9 col-lg-10 col-md-11 col-12 my-5">
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
@@ -14,46 +14,38 @@
                 </nav>
             </div>
         </div>
-        {% for project in projects %}
-        <div class="row">
-            <div class="col-xl-9 col-lg-10 col-md-11 ">
-                <div class="container">
-                    <div class="row ml-md-2">
-                        <div class="col-12 d-flex mb-0">
-                            <h4>{{ project.name }}</h4>
-                            <span class="ml-auto">
-                                <a href="{{ path('update_project', {id: project.id}) }}">Modifier</a>
-                            </span>
-                        </div>
-                        <div class="col-12 ml-2"> Project : <a href="{{ path('show_project', {id: project.id}) }}">{{ project.name }}</a></div>
-                        <div class="ml-3 mt-3 col-12">
-                            {% for user in project.team.users %}
-                                <div class="col-12 d-flex">
-                                    {% if user.id == project.leader.id %}
-                                        <div> Chef de Projet :  {{ project.leader.pseudo }}</div>
+        {% if projects is empty %}
+            <div class="row my-4">
+                <div class="col-md-2 mt-5">
+                    <a href="{{ path('list_teams') }}" class="btn btn-primary btn-circle my-1 position-relative">Voir vos équipes</a>
+                </div>
+            </div>
+            <div class="row ">
+            </div>
+        {% endif %}
+        {% for project in projects|sort((a, b) => b.updatedAt <=> a.updatedAt) %}
+            <div class="row my-4">
+                <div class="col-xl-9 col-lg-10 col-md-11 ">
+                    <div class="container">
+                        <div class="row ml-md-2">
+                            <div class="col-12 mb-0">
+                                <div class="col-md-12 d-flex">
+                                    <h2 class="my-3"><a href="{{ path('show_project', {id: project.id }) }}">{{ project.name }}</a></h2>
+                                    {% if (project.leader.id) is same as (app.user.id)  %}
+                                        <div class="ml-auto align-self-center d-flex">
+                                            <a href="{{ path('update_project', {id: project.id}) }}" class="btn btn-success btn-circle position-relative">Modifier</a>
+                                        </div>
                                     {% endif %}
                                 </div>
-                                {% if user.id != project.leader.id %}
-                                    <div class="col-12 d-flex">
-                                        <div>{{ user.lastname }} {{ user.firstname }} ({{ user.pseudo }})</div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                            <div class="ml-3 mt-3 col-12">
-                                Date de création: {{ project.createdAt | date('d M Y') }}
-                            </div>
-                            <div class="ml-3 mt-3 col-12">
-                                Mis à jour le : {{ project.updatedAt | date('d/m/Y H:i:s') }}
+                                <div class="col-md-12 d-flex">
+                                    <h4> Groupe : <a href="{{ path('show_team', {id: project.team.id }) }}">{{ project.team.name }}</a></h4>
+                                </div>
+                                <div class="col-md-12 font-size-3"> Chef de projet: {{ project.leader.pseudo }} • Date de création: {{ project.createdAt | date('d M Y') }} • Mis à jour le : {{ project.updatedAt | date('d/m/Y H:i:s') }}</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row ml-md-2 my-3">
-
                     </div>
                 </div>
             </div>
-        </div>
-        <hr>
         {% endfor %}
     </div>
 {% endblock %}
