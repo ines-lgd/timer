@@ -1,32 +1,68 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TimerController!{% endblock %}
+{% block title %}- Historique{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Timers</h1>
-    {% if app.request.get('_route') == 'list_timers' %}
-        <a href="{{ path('add_timer', {id: project_id}) }}">Ajouter un Timer</a>
-    {% endif %}
-
-    {% for timer in timers %}
-        <a href="{{ path('show_timer', {id: timer.id}) }}">{{ timer.name }}</a> <br />
-
-        {% if timer.end is not empty %}
-            <div>Temps : {{ timer.getTime }}</div>
-        {% endif %}
-
-        Date de création: {{ timer.createdAt | date('d M Y') }} <br />
-        Statut {{ timer.getStatusToString }}
-        <br />
-        <br />
-        <br />
-    {% endfor %}
-
-</div>
+    <div class="container">
+        <div class="row">
+            <h1 class="col-8 mt-5">Timers</h1>
+            {% if app.request.get('_route') == 'list_timers' %}
+                <h2 class="mt-5">
+                    <a href="{{ path('add_timer', {id: project_id}) }}">Ajouter un timer</a>
+                </h2>
+            {% endif %}
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 my-5">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Timers</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <table class="table nowrap">
+            <thead>
+            <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Durée</th>
+                <th scope="col">Créé par</th>
+                <th scope="col">Date de création</th>
+                <th scope="col">Statut</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for timer in timers %}
+            <tr>
+                <td><a class="font-weight-bold" href="{{ path('show_timer', {id: timer.id}) }}">{{ timer.name }}</a></td>
+                <td>
+                    {% if timer.end is not empty %}
+                        {{ timer.getTime | date('H\\h i\\m s\\s') }}
+                    {% endif %}
+                </td>
+                <td>{{ timer.user.pseudo }}</td>
+                <td>{{ timer.createdAt | date('d/m/y H:i') }}</td>
+                <td>
+                    {{ timer.getStatusToString }}
+                    {% if timer.getStatusToString == 'EN COURS' %}
+                        <span>🟠</span>
+                    {% elseif timer.getStatusToString == 'PRÊT' %}
+                        <span>🟢</span>
+                    {% else %}
+                        <span>🔴</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn-secondary btn-sm ml-1" role="button" href="{{ path('update_timer', {id: timer.id}) }}">
+                        <i class="far fa-edit"></i>
+                    </a>
+                    <a class="btn-danger btn-sm ml-1" role="button" href="{{ path('remove_timer', {id: timer.id}) }}">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}

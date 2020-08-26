@@ -11,6 +11,7 @@ $(document).ready(function () {
             let now = new Date();
             let start =  new Date(div.data('timer').date);
             let diff = now - start;
+            let dot = ":";
 
             diff = new Date(diff);
 
@@ -36,10 +37,14 @@ $(document).ready(function () {
                 mil = "0" + mil
             }
 
-            div.text(hr + ":" + min + ":" + sec + ":" + mil);
+            if (sec%2 === 0) {
+                dot = " : ";
+            } else {
+                dot = " . ";
+            }
+
+            div.text(hr + dot + min + dot + sec + dot + mil);
 
         }, 10);
     }
-
-
 })

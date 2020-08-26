@@ -13,83 +13,29 @@
 
         <div class="row">
             <div class="col-md-4 my-4">
-                <h4 class="home-card-titre"><a href="{{ path('list_teams') }}" class="home-card font-weight-bold my-3">Team View</a></h4>
-                <a href="{{ path('list_teams') }}"><img src="img/team.jpg" alt="photo team" class=" img-fluid my-2"></a>
+                <h4 class="home-card-titre"><a href="{{ path('list_teams') }}" class="home-card font-weight-bold my-3">Équipes</a></h4>
+                <a href="{{ path('list_teams') }}"><img src="{{ asset('img/team.jpg') }}" alt="photo team" class=" img-fluid my-2"></a>
                 {% if app.user %}
-                    <div class="my-3">Number of team : {{ count_teams }}</div>
-                    <div class="my-3">Last team you worked with : {{ last_team.name is empty or last_team.name ? "Aucun" }}</div>
+                    <div class="my-3">Nombre d'équipes : {{ count_teams }}</div>
+                    <div class="my-3">Dernière équipe : {{ last_team.name is empty or last_team.name ? "Aucune" }}</div>
                 {% endif %}
             </div>
             <div class="col-md-4 my-4">
-                <h4 class="home-card-titre"><a href="{{ path('list_projects') }}" class="home-card font-weight-bold my-3">Project View</a></h4>
-                <a href="{{ path('list_projects') }}"><img src="img/project.jpg" alt="photo project" class="img-fluid my-2"></a>
+                <h4 class="home-card-titre"><a href="{{ path('list_projects') }}" class="home-card font-weight-bold my-3">Projets</a></h4>
+                <a href="{{ path('list_projects') }}"><img src="{{ asset('img/project.jpg') }}" alt="photo project" class="img-fluid my-2"></a>
                 {% if app.user %}
-                    <div class="my-3">Number of project : {{ count_projects }}</div>
-                    <div class="my-3">Last project you worked on : {{ last_project.name is empty or last_team.name ? "Aucun" }}</div>
+                    <div class="my-3">Nombre de projets : {{ count_projects }}</div>
+                    <div class="my-3">Dernier projet : {{ last_project.name is empty or last_team.name ? "Aucun" }}</div>
                 {% endif %}
             </div>
             <div class="col-md-4 my-4">
-                <h4 class="home-card-titre"><a href="{{ path('list_user_timers') }}" class="home-card font-weight-bold my-3">Timer View</a></h4>
-                <a href="{{ path('list_user_timers') }}"><img src="img/timer.jpg" alt="photo timer" class=" img-fluid my-2"></a>
+                <h4 class="home-card-titre"><a href="{{ path('list_user_timers') }}" class="home-card font-weight-bold my-3">Timer</a></h4>
+                <a href="{{ path('list_user_timers') }}"><img src="{{ asset('img/timer.jpg') }}" alt="photo timer" class=" img-fluid my-2"></a>
                 {% if app.user %}
-                    <div class="my-3">Number of Time you worked : {{ count_timers == "" ? "00h 00min 00s" :  count_timers | date ('H\\h i\\m\\i\\n s\\s')}}</div>
-                    <div class="my-3">Last Session duration : {{ last_timer.getTime == "" ? "00h 00min 00s" : last_timer.getTime | date('H\\h i\\m\\i\\n s\\s') }}</div>
+                    <div class="my-3">Nombre de temps total : {{ count_timers == "" ? "00h 00min 00s" :  count_timers | date ('H\\h i\\m\\i\\n s\\s')}}</div>
+                    <div class="my-3">Dernière session : {{ last_timer.getTime == "" ? "00h 00min 00s" : last_timer.getTime | date('H\\h i\\m\\i\\n s\\s') }}</div>
                 {% endif %}
             </div>
         </div>
     </div>
-
-
 {% endblock %}
-
-
-
-
-
-{#{% extends 'base.html.twig' %}#}
-
-{#{% block body %}#}
-{#    <div id="home-banner-image">#}
-{#        <div id="home-banner-image-bg-color" >#}
-{#            <div id="home-banner-center">#}
-{#                <div class="row">#}
-{#                    <div class="col-md-12">#}
-{#                        <h1>Timer Application</h1>#}
-{#                    </div>#}
-{#                </div>#}
-
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#    <div class="container py-5" id="home-background">#}
-{#        <div class="row">#}
-{#            <div class="col-md-12 ">#}
-{#                <h1> Timer Application</h1>#}
-{#                <p class="pt-3">Timer application description, industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchange</p>#}
-{#            </div>#}
-{#        </div>#}
-
-{#        <div class="row">#}
-{#            <div class="col-md-4 my-4">#}
-{#                <h4 class="home-card-titre"><a href="{{ path('app_home') }}" class="home-card font-weight-bold my-3">Team View</a></h4>#}
-{#                <a href="{{ path('app_home') }}"><img src="img/team.jpg" alt="photo team" class=" img-fluid my-2"></a>#}
-{#                <div class="my-3">Number of team : 3</div>#}
-{#                <div class="my-3">Last team you worked with: team Lorem</div>#}
-{#            </div>#}
-{#            <div class="col-md-4 my-4">#}
-{#                <h4 class="home-card-titre"><a href="{{ path('app_home') }}" class="home-card font-weight-bold my-3">Project View</a></h4>#}
-{#                <a href="{{ path('app_home') }}"><img src="img/project.jpg" alt="photo project" class="img-fluid my-2"></a>#}
-{#                <div class="my-3">Number of project : 3</div>#}
-{#                <div class="my-3">Last project you worked on: Project Lorem</div>#}
-{#            </div>#}
-{#            <div class="col-md-4 my-4">#}
-{#                <h4 class="home-card-titre"><a href="{{ path('app_home') }}" class="home-card font-weight-bold my-3">Timer View</a></h4>#}
-{#                <a href="{{ path('app_home') }}"><img src="img/timer.jpg" alt="photo timer" class=" img-fluid my-2"></a>#}
-{#                <div class="my-3">Number of Time you worked : 150h 30min 2s</div>#}
-{#                <div class="my-3">Last Session duration : 3h 50min 20s</div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-
-
-{#{% endblock %}#}
