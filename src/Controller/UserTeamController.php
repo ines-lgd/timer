@@ -116,9 +116,19 @@ class UserTeamController extends AbstractController
 
         // Check if User logged is Creator and if User removed is Creator
         if (
-            $team->getCreatedBy()->getId() == $user_logged->getId() ||
-            $team->getCreatedBy()->getId() == $user->getId()
+            $team->getCreatedBy()->getId() === $user_logged->getId() ||
+            $user_logged->getId() === $user->getId()
         ) {
+
+            if ($team->getCreatedBy()->getId() === $user->getId()) {
+
+                $this->addFlash('warning', 'L’admin ne peut pas quitter le groupe.');
+
+                return $this->redirectToRoute('show_team', [
+                    'id' => $team->getId()
+                ]);
+            }
+
             // Remove User in Team and Update Team in database
             $team->removeUser($user);
             $this->entityManager->persist($team);

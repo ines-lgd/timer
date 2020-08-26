@@ -1,15 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}- Projet{% endblock %}
+{% block title %}- Project{% endblock %}
 
 {% block body %}
-    <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-        <script src="{{ asset('js/team.js') }}" type="text/javascript"></script>
-    </head>
-
     <div class="container">
         <div class="row">
             <div class="col-md-12 my-5">
@@ -47,9 +40,9 @@
             <div class="col-md-12 my-5">
 
                 <div class="row d-flex">
-                    <div class="col-md-8 my-3"><h4 >Timers :</h4></div>
+                    <div class="col-md-8 my-3"><h4>Timers : <span>{{ time | date('H:i:s') }}</span></h4> </div>
                     <div class="ml-auto my-3">
-                        <a  class="btn-primary btn" href="{{ path('add_project', {id: project.id }) }}">Ajouter un Timer</a>
+                        <a  class="btn-primary btn" href="{{ path('add_timer', {id: project.id }) }}">Ajouter un Timer</a>
                     </div>
                 </div>
                 <table class="table nowrap" id="tableNews">
@@ -63,10 +56,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for timer in project.timers %}
+                    {% for timer in project.timers | sort((a, b) => b.createdAt <=> a.createdAt) %}
                         <tr>
                             <td class="v-align-middle">
-                                <p class="m-0">{{ timer.name }}</p>
+                                <a class="m-0 font-weight-bold" href="{{ path('show_timer', {id: timer.id}) }}">{{ timer.name }}</a>
                             </td>
                             <td class="v-align-middle">
                                 <p class="m-0">{{ timer.user.pseudo }}</p>
@@ -83,15 +76,18 @@
                                 ">{{ timer.getStatusToString }}</span>
                             </td>
                             <td class="v-align-middle">
-                                {% if (timer.getTime) is not null %}
-                                    <p class="m-0">{{ timer.getTime }}</p>
+                                {% if (timer.end) is not null %}
+                                    <p class="m-0">{{ timer.getTime | date ('H:i:s') }}</p>
                                 {% endif %}
                             </td>
                             <td class="v-align-middle ml-n3">
-                                {% if (app.user.id)  is same as (timer.user.id) %}
-                                    <div class="btn btn-danger">
-                                        <a href="{{ path('remove_timer', {id: timer.id}) }}">Ssupprimer</a>
-                                    </div>
+                                {% if (app.user.id) is same as (timer.user.id)
+                                    or (app.user.id) is same as (project.createdBy.id)
+                                    or (app.user.id) is same as (project.leader.id)
+                                %}
+                                    <a class="btn btn-danger" href="{{ path('remove_timer', {id: timer.id}) }}">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
                                 {% endif %}
                             </td>
                         </tr>

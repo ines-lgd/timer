@@ -129,7 +129,7 @@ class TimerController extends AbstractController
         $timer = $this->timerRepository->findOneBy(['id' => $id]);
 
         // Check if User logged is not User's Timer
-        if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
+        if ($timer->getUser()->getPseudo() ==! $this->getUser()->getUsername()) {
 
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas modifier ce timer.');
@@ -177,12 +177,12 @@ class TimerController extends AbstractController
         $timer = $this->timerRepository->findOneBy(['id' => $id]);
 
         // Check if User logged is not User's Timer
-        if ($timer->getUser()->getUsername() ==! $this->getUser()->getUsername()) {
+        if ($timer->getUser()->getPseudo() ==! $this->getUser()->getUsername()) {
 
             // Add message flash
             $this->addFlash('warning', 'Vous ne pouvez pas supprimer ce Timer.');
 
-            return $this->redirectToRoute('list_timers', [
+            return $this->redirectToRoute('show_project', [
                 'id' => $timer->getProject()->getId()
             ]);
         }
@@ -199,7 +199,7 @@ class TimerController extends AbstractController
         // Add message flash
         $this->addFlash('notification', 'Le timer a bien été supprimé.');
 
-        return $this->redirectToRoute('list_timers', [
+        return $this->redirectToRoute('show_project', [
             'id' => $timer->getProject()->getId()
         ]);
     }

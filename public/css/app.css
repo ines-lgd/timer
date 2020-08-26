@@ -88,8 +88,13 @@ body {
     padding-bottom: 5px;
 }
 
-.table a.font-weight-bold {
+.table a.font-weight-bold, h2 a, h3 a, a {
     color: #63aeff;
+}
+
+.table a:hover.font-weight-bold:hover, h2 a:hover, h3 a:hover, a:hover {
+    color: #63aeff99;
+    text-decoration: none;
 }
 
 .timer {
