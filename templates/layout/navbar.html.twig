@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <a class="navbar-brand" href={{ path('app_home') }}>Timer</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="offset-md-1  navbar-nav  col-md-6">
+            <li class="nav-item">
+                <a class="nav-link mx-3" href={{ path('list_teams') }}>Équipes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link mx-3" href={{ path('list_projects') }}>Projets</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link mx-3" href={{ path('list_user_timers') }}>Timers</a>
+            </li>
+            <div class="navbar-nav d-lg-none d-inline-block">
+                <ul class="navbar-nav ">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <li class="nav-item">
+                            <div class="navbar-text">{{ app.user.pseudo }} </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('app_logout') }}> Déconnexion</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('app_login') }}>Connexion </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('app_register') }}> Inscription</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </ul>
+    </div>
+    <div class="align-self-end navbar-nav d-lg-inline-block d-none">
+        <ul class="navbar-nav ">
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <li class="nav-item">
+                   <div class="navbar-text border-right">{{ app.user.pseudo }} </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={{ path('app_logout') }}> Déconnexion</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href={{ path('app_login') }}>Connexion </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={{ path('app_register') }}> Inscription</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
+</nav>

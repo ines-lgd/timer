@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- Équipes{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row ">
+            <h1 class="col-6 mt-5"> Vos Équipes</h1>
+            <div class="col-md-2 ml-auto my-5">
+                <a href="{{ path('add_team') }}" class="btn btn-primary btn-circle my-1 position-relative">Créer une équipe</a>
+            </div>
+            <div class="col-md-2 ml-auto my-5"></div>
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Vos Équipes</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        {% if teams is empty %}
+            <div class="row my-4">
+                <div class="col-md-2 mt-5">
+                    <a href="{{ path('add_team') }}" class="btn btn-primary btn-circle my-1 position-relative">Créer une équipe</a>
+                </div>
+            </div>
+            <div class="row ">
+          </div>
+        {% endif %}
+        {% for team in teams %}
+            <div class="row my-4">
+                <div class="col-xl-9 col-lg-10 col-md-11 ">
+                    <div class="container">
+                        <div class="row ml-md-2">
+                            <div class="col-12 mb-0">
+                                <div class="col-md-12 d-flex">
+                                    <h2 class="my-3"><a href="{{ path('show_team', {id: team.id }) }}">{{ team.name }}</a></h2>
+                                    {% if (team.createdBy.id) is same as (app.user.id)  %}
+                                        <div class="ml-auto align-self-end d-flex">
+                                            <a href="{{ path('update_team', {id: team.id}) }}" class="btn btn-success btn-circle position-relative">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                                <div class="col-md-12 font-size-3">Créé par : {{ team.createdBy.pseudo }} • Nombre d'utilisateurs : {{ team.users.count }} • Nombre de projets : {{ team.projects.count }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- Mise à jour{% endblock %}
+
+{% block body %}
+<div class="container">
+        <div class="row">
+            <div class="col-md-12 my-5">
+                <h1>{% if app.request.get('_route') == 'update_timer' %}
+                    Modifier le{% else %}Créer un
+                    {% endif %}timer</h1>
+            </div>
+            <div class="col-md-12">
+
+                {{ form_start(form) }}
+
+                <div class="row form-ul-style">
+                    <div class="col-md-6 my-3">
+                        {{ form_label(form.name, 'Nom du timer : ', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-input form-control col-md-12'}}) }}
+                        {{ form_errors(form.name, {'attr': {'class': 'col-md-12 '}}) }}
+                    </div>
+                    <div class="col-md-8 my-3">
+                        {{ form_label(form.description, 'Description : ', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'form-input form-control col-md-12'}}) }}
+                        {{ form_errors(form.description, {'attr': {'class': 'col-md-12 '}}) }}
+                    </div>
+                    <div class="col-md-6 my-5">
+                        {{ form_widget(form.submit, { 'label': 'Valider', 'attr': {'class': 'btn btn-primary'} }) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

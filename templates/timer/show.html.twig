@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- {{ timer.name }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <h1 class="col-8 my-5">Timer</h1>
+        <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('list_projects') }}">Vos Projets</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('show_project', {id:timer.project.id}) }}">{{ timer.project.name }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ timer.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row ml-md-2 my-5">
+        <div class="col-12 d-flex mb-0">
+            <h4>{{ timer.name }}</h4>
+            <span class="ml-auto">
+                <a class="btn btn-success my-1 position-relative" role="button" href="{{ path('update_timer', {id: timer.id}) }}">
+                    <i class="far fa-edit"></i>
+                </a>
+                <button class="btn btn-danger my-1 position-relative" data-toggle="modal" data-target="#deleteModal">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </span>
+        </div>
+        <div class="col-12 ml-2"> Créé le {{ timer.createdAt | date('d/m/Y') }} par {{ timer.user.username }}</div>
+
+        <div class="col-11 col-lg-8 d-flex mx-auto my-5 p-4 timer">
+            <div class="d-flex flex-column align-self-center btn-timer">
+                {% if timer.getStatusToString == 'PRÊT' %}
+                    <a class="text-primary btn" role="button" href="{{ path('run_timer', {id: timer.id}) }}">
+                        <i class="fas fa-play"></i>
+                    </a>
+                {% elseif timer.getStatusToString == 'EN COURS' %}
+                    <a class="text-danger" role="button" href="{{ path('stop_timer', {id: timer.id}) }}">
+                        <i class="fas fa-stop"></i>
+                    </a>
+                {% endif %}
+                {% if timer.start is not null and timer.end is null %}
+                    <a class="text-secondary" role="button" href="{{ path('reset_timer', {id: timer.id}) }}">
+                        <i class="fas fa-redo-alt"></i>
+                    </a>
+                {% endif %}
+            </div>
+            {% if timer.getStatusToString == 'EN COURS' %}
+                <div class="d-flex align-items-center">
+                    <div id="timer" data-status="{{ timer.getStatusToString }}" data-timer="{{ timer.start | json_encode() }}"></div>
+                </div>
+            {% elseif timer.end is not empty %}
+                <div id="timer" class="d-flex align-items-center">
+                    {{ timer.getTime | date("H : i : s")}}
+                </div>
+
+            {% endif %}
+            {% if timer.getStatusToString == 'PRÊT' %}
+                <div class="d-flex align-self-center ml-auto caption">
+                    PRET
+                </div>
+            {% elseif timer.getStatusToString == 'TERMINÉ' %}
+                <div class="d-flex align-self-center ml-auto caption">
+                    TERMINE
+                </div>
+            {% else %}
+                <div class="d-flex align-self-end ml-auto caption">
+                    {{ timer.getStatusToString }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="ml-3 mt-3 col-12">
+            Description :
+            <div class="ml-3">
+                {{ timer.description }}
+            </div>
+        </div>
+
+    </div>
+    {% include "layout/modal.html.twig" %}
+</div>
+{% endblock %}

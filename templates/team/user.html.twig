@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- Equipes{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 my-5">
+                <h1> Ajouter un membre</h1>
+            </div>
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('list_teams') }}">Vos Equipes</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('show_team', {id: team.id }) }}">{{ team.name }}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('update_team', {id: team.id}) }}">Modifier l'équipe</a>
+                        <li class="breadcrumb-item active" aria-current="page">Ajouter un membre</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-md-12 my-4">
+
+                {{ form_start(form) }}
+
+                <div class="row flex form-ul-style">
+                    <div class="col-md-6 my-3">
+                        {{ form_label(form.user, 'Pseudo de l’utilisateur : ', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.user, {'attr': {'id': 'user_field', 'class': 'form-input form-control col-md-12', 'list': 'user_list'}}) }}
+                        {{ form_errors(form.user, {'attr': {'class': 'col-md-12 '}}) }}
+                    </div>
+                    <div class="col-md-6 my-5">
+
+                        {{ form_widget(form.submit, { 'label': "Ajouter l'utilisateur", 'attr': {'class': 'btn btn-primary'} }) }}
+                        <datalist id="user_list">
+                            {% for user in users %}
+                                <option value="{{ user.pseudo }}">
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </div>
+                <div class="row flex form-ul-style my-5">
+                    <div class="col-md-12 ">
+                        <div class="row d-flex">
+                            <div class="col-md-8 my-3"><h4> Liste des membres :</h4></div>
+                        </div>
+                        <table class="table nowrap" id="tableNews">
+                            <thead>
+                            <tr>
+                                <th>Pseudo</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Admin</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in team.users %}
+                                <tr>
+                                    <td class="v-align-middle">
+                                        <p class="m-0">{{ user.pseudo }}</p>
+                                    </td>
+                                    <td class="v-align-middle">
+                                        <p class="m-0">{{ user.firstname }}</p>
+                                    </td>
+                                    <td class="v-align-middle">
+                                        <p class="m-0">{{ user.lastname }}</p>
+                                    </td>
+                                    <td class="v-align-middle">
+                                        {% if (team.createdBy.id) is same as (user.id)  %}
+                                            <span class="badge badge-success px-2 py-1">Admin</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="v-align-middle ml-n3">
+                                        {% if (app.user.id)  is same as (team.createdBy.id) and (user.id) is not same as (team.createdBy.id) %}
+                                            <a class="btn btn-danger" href="{{ path('delete_user_team', {team_id: team.id, user_id: user.id}) }}">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+                <a class="btn btn-success" href="{{ path('show_team', {id: team.id }) }}">Terminer</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

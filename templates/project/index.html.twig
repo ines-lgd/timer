@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- Projets{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <h1 class="col-12 my-5"> Vos Projets</h1>
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Vos Projets</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        {% if projects is empty %}
+            <div class="row my-4">
+                <div class="col-md-2 mt-5">
+                    <a href="{{ path('list_teams') }}" class="btn btn-primary btn-circle my-1 position-relative">Voir vos équipes</a>
+                </div>
+            </div>
+            <div class="row">
+            </div>
+        {% endif %}
+        {% for project in projects|sort((a, b) => b.updatedAt <=> a.updatedAt) %}
+            <div class="row my-4">
+                <div class="col-xl-9 col-lg-10 col-md-11 ">
+                    <div class="container">
+                        <div class="row ml-md-2">
+                            <div class="col-12 mb-0">
+                                <div class="col-md-12 d-flex">
+                                    <h2 class="my-3"><a href="{{ path('show_project', {id: project.id }) }}">{{ project.name }}</a></h2>
+                                    {% if (project.leader.id) is same as (app.user.id)  %}
+                                        <div class="ml-auto align-self-end d-flex">
+                                            <a href="{{ path('update_project', {id: project.id}) }}" class="btn btn-success btn-circle position-relative">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-12 d-flex">
+                                    <h4> Groupe : <a href="{{ path('show_team', {id: project.team.id }) }}">{{ project.team.name }}</a></h4>
+                                </div>
+                                <div class="col-md-12 font-size-3"> Chef de projet: {{ project.leader.pseudo }} • Date de création: {{ project.createdAt | date('d M Y') }} • Mis à jour le : {{ project.updatedAt | date('d/m/Y H:i:s') }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

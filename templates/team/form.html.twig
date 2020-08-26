@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- Equipes{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 my-5">
+                <h1>{% if app.request.get('_route') == 'update_team' %}
+                    Modifier l'{% else %}Créer une
+                {% endif %}équipe</h1>
+            </div>
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('list_teams') }}">Vos Equipes</a></li>
+                        {% if app.request.get('_route') == 'update_team' %}
+                            <li class="breadcrumb-item"><a href="{{ path('show_team', {id: team.id }) }}">{{ team.name }}</a></li>
+                        {% endif %}
+                        <li class="breadcrumb-item active" aria-current="page">{% if app.request.get('_route') == 'update_team' %}Modifier l'{% else %}Créer une {% endif %}équipe</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-md-12">
+
+                {{ form_start(form) }}
+
+                <div class="row flex form-ul-style">
+                    <div class="col-md-6  my-4">
+                        {{ form_label(form.name, 'Nom du groupe : ', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-input form-control col-md-12'}}) }}
+                        {{ form_errors(form.name, {'attr': {'class': 'col-md-12 '}}) }}
+                    </div>
+                    <div class="col-md-6 my-5 ">
+                        {{ form_widget(form.submit, { 'label': 'Valider', 'attr': {'class': 'btn btn-primary'} }) }}
+                    </div>
+                    <div class="col-md-11 my-3">
+                        {% if team is defined %}
+
+
+                            <div class="row d-flex">
+                                <div class="col-md-8 my-3"><h4> Liste des membres :</h4></div>
+                            </div>
+                            <table class="table nowrap" id="tableNews">
+                                <thead>
+                                <tr>
+                                    <th>Pseudo</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Admin</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in team.users %}
+                                    <tr>
+                                        <td class="v-align-middle">
+                                            <p class="m-0">{{ user.pseudo }}</p>
+                                        </td>
+                                        <td class="v-align-middle">
+                                            <p class="m-0">{{ user.firstname }}</p>
+                                        </td>
+                                        <td class="v-align-middle">
+                                            <p class="m-0">{{ user.lastname }}</p>
+                                        </td>
+                                        <td class="v-align-middle">
+                                            {% if (team.createdBy.id) is same as (user.id)  %}
+                                                <span class="badge badge-success px-2 py-1">Admin</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="v-align-middle ml-n3">
+                                            {% if (app.user.id)  is same as (team.createdBy.id) %}
+                                                <div class="btn btn-danger">
+                                                    <a href="{{ path('delete_user_team', {team_id: team.id, user_id: user.id}) }}">Ssupprimer</a>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        {% endif %}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
