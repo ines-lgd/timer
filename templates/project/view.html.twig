@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-12">
                 <div class="row d-flex">
-                    <div class="col-md-6  my-4>
+                    <div class="col-md-6 my-4">
                         <h2>
                             Team : <a href="{{ path('show_team', {id: project.team.id }) }}">{{ project.team.name }}</a>
                         </h2>
@@ -83,7 +83,9 @@
                                 ">{{ timer.getStatusToString }}</span>
                             </td>
                             <td class="v-align-middle">
-                                <p class="m-0">{{ timer.getTime }}</p>
+                                {% if (timer.getTime) is not null %}
+                                    <p class="m-0">{{ timer.getTime }}</p>
+                                {% endif %}
                             </td>
                             <td class="v-align-middle ml-n3">
                                 {% if (app.user.id)  is same as (timer.user.id) %}

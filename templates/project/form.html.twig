@@ -27,7 +27,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
                     <li class="breadcrumb-item"><a href="{{ path('list_projects') }}">Vos Projets</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('show_project', {id: project.id }) }}">{{ project.name }}</li>
+                    <li class="breadcrumb-item"><a href="{{ path('show_project', {id: project.id}) }}">{{ project.name }}</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{% if app.request.get('_route') == 'update_project' %} Modifier le{% else %} Ajouter un{% endif %} projet</li>
                 </ol>
             </nav>

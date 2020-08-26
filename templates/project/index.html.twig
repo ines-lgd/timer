@@ -20,7 +20,7 @@
                     <a href="{{ path('list_teams') }}" class="btn btn-primary btn-circle my-1 position-relative">Voir vos équipes</a>
                 </div>
             </div>
-            <div class="row ">
+            <div class="row">
             </div>
         {% endif %}
         {% for project in projects|sort((a, b) => b.updatedAt <=> a.updatedAt) %}
