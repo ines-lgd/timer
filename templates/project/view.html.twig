@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProjectController!{% endblock %}
+{% block title %}- Projet{% endblock %}
 
 {% block body %}
     <head>
@@ -10,39 +10,95 @@
         <script src="{{ asset('js/team.js') }}" type="text/javascript"></script>
     </head>
 
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 my-5">
+                <h1>{{ project.name }}</h1>
+                {% if (app.user.id)  is same as (project.createdBy.id) or (app.user.id)  is same as (project.leader.id)%}
+                    <a href="{{ path('update_project', {id: project.id }) }}">Modifier</a>
+                {% endif %}
+            </div>
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('list_projects') }}">Vos Projets</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ project.name }}</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-md-12">
+                <div class="row d-flex">
+                    <div class="col-md-6 my-4">
+                        <h2>
+                            Team : <a href="{{ path('show_team', {id: project.team.id }) }}">{{ project.team.name }}</a>
+                        </h2>
+                    </div>
+                    <div class="col-md-6 my-3"><h3>Chef d'équipe : <span class="text-warning"> {{ project.leader.pseudo }}</span></h3></div>
+                    <div class="col-md-10">Projet créer par : <span class="text-warning">{{ project.createdBy.pseudo }}</span> le <span class="text-warning">{{ project.createdAt | date('d/M/Y') }}</span></div>
+                    <div class="col-md-10">Date de dernière mise à jour : <span class="text-warning">{{ project.updatedAt | date('d/M/Y H:i:s') }}</span></div>
+                    <div class="col-md-12 my-3"><h4 >Description : </h4>
+                        {{ project.description }}
+                    </div>
+                </div>
+            </div>
 
-    <div class="example-wrapper">
-        <h1>{{ project.name }}</h1>
-        <br />
-        {% if project is defined %}
-            <h4>Description :</h4>
-            {{ project.description }}
-            <br />
-            <h4>Team :</h4>
-            <a href="{{ path('show_team', {id: project.team.id }) }}">{{ project.team.name }}</a>
-            <br />
-            <h4>Leader :</h4>
-            {{ project.leader.pseudo }}
-            <br />
-            <h4>Créé par :</h4>
-            {{ project.createdBy.pseudo }}
-            <br />
-            <h4>Date de création : </h4>{{ project.createdAt | date('d M Y') }}
-            <br />
-            <h4>Date de dernière mise à jour : </h4>{{ project.updatedAt | date('d M Y H:i:s') }}
-            <br />
-            <br />
 
-            {% if app.user.pseudo == project.leader.pseudo %}
-            <a href="{{ path('update_project', {id: project.id }) }}">Modifier</a>
-            <br />
-            <a style="color: red" href="{{ path('remove_project', {id: project.id}) }}">Supprimer</a>
-            {% endif %}
-        {% endif %}
+            <div class="col-md-12 my-5">
 
+                <div class="row d-flex">
+                    <div class="col-md-8 my-3"><h4 >Timers :</h4></div>
+                    <div class="ml-auto my-3">
+                        <a  class="btn-primary btn" href="{{ path('add_project', {id: project.id }) }}">Ajouter un Timer</a>
+                    </div>
+                </div>
+                <table class="table nowrap" id="tableNews">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Membre</th>
+                        <th>Status</th>
+                        <th>Temps</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for timer in project.timers %}
+                        <tr>
+                            <td class="v-align-middle">
+                                <p class="m-0">{{ timer.name }}</p>
+                            </td>
+                            <td class="v-align-middle">
+                                <p class="m-0">{{ timer.user.pseudo }}</p>
+                            </td>
+                            <td class="v-align-middle">
+                                <span class="badge  px-2 py-1
+                                {% if (timer.getStatusToString) is same as ("PRÊT") %}
+                                    badge-success
+                                {% elseif (timer.getStatusToString) is same as ("EN COURS") %}
+                                    badge-warning
+                                {% else %}
+                                    badge-danger
+                                {% endif %}
+                                ">{{ timer.getStatusToString }}</span>
+                            </td>
+                            <td class="v-align-middle">
+                                {% if (timer.getTime) is not null %}
+                                    <p class="m-0">{{ timer.getTime }}</p>
+                                {% endif %}
+                            </td>
+                            <td class="v-align-middle ml-n3">
+                                {% if (app.user.id)  is same as (timer.user.id) %}
+                                    <div class="btn btn-danger">
+                                        <a href="{{ path('remove_timer', {id: timer.id}) }}">Ssupprimer</a>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}

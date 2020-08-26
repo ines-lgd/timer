@@ -6,9 +6,20 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 my-5">
-                <h1> Ajouter un membre </h1>
+                <h1> Ajouter un membre</h1>
             </div>
-            <div class="col-md-12">
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('list_teams') }}">Vos Equipes</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('show_team', {id: team.id }) }}">{{ team.name }}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('update_team', {id: team.id}) }}">Modifier l'équipe</a>
+                        <li class="breadcrumb-item active" aria-current="page">Ajouter un membre</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-md-12 my-4">
 
                 {{ form_start(form) }}
 
@@ -29,10 +40,7 @@
                     </div>
                 </div>
                 <div class="row flex form-ul-style my-5">
-
-
                     <div class="col-md-12 ">
-
                         <div class="row d-flex">
                             <div class="col-md-8 my-3"><h4> Liste des membres :</h4></div>
                         </div>

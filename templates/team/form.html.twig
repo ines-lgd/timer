@@ -19,12 +19,22 @@
                     Modifier l'{% else %}Créer une
                 {% endif %}équipe</h1>
             </div>
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('list_teams') }}">Vos Equipes</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('show_team', {id: team.id }) }}">{{ team.name }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{% if app.request.get('_route') == 'update_team' %}Modifier l'{% else %}Créer une{% endif %}équipe</li>
+                    </ol>
+                </nav>
+            </div>
             <div class="col-md-12">
 
                 {{ form_start(form) }}
 
                 <div class="row flex form-ul-style">
-                    <div class="col-md-6 my-3">
+                    <div class="col-md-6  my-4">
                         {{ form_label(form.name, 'Nom du groupe : ', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.name, {'attr': {'class': 'form-input form-control col-md-12'}}) }}
                         {{ form_errors(form.name, {'attr': {'class': 'col-md-12 '}}) }}

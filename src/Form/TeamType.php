@@ -16,8 +16,19 @@ class TeamType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('submit', SubmitType::class)
+            ->add('name', TextType::class, [
+                'label'    => 'Nom : ',
+                'required' => 1,
+                'attr'     => [
+                    'class' => 'form-control col-xl-6 col-md-6 col-lg-6 p-0 mb-3',
+                ]
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Confirmer',
+                'attr'  => [
+                    'class' => 'btn btn-primary',
+                ]
+            ])
         ;
     }
 
