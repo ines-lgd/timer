@@ -28,7 +28,7 @@
                         </h2>
                     </div>
                     <div class="col-md-6 my-3"><h3>Chef d'équipe : <span class="text-warning"> {{ project.leader.pseudo }}</span></h3></div>
-                    <div class="col-md-10">Projet créer par : <span class="text-warning">{{ project.createdBy.pseudo }}</span> le <span class="text-warning">{{ project.createdAt | date('d/M/Y') }}</span></div>
+                    <div class="col-md-10">Projet créé par : <span class="text-warning">{{ project.createdBy.pseudo }}</span> le <span class="text-warning">{{ project.createdAt | date('d/M/Y') }}</span></div>
                     <div class="col-md-10">Date de dernière mise à jour : <span class="text-warning">{{ project.updatedAt | date('d/M/Y H:i:s') }}</span></div>
                     <div class="col-md-12 my-3"><h4 >Description : </h4>
                         {{ project.description }}

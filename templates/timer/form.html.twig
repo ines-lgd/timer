@@ -7,8 +7,26 @@
         <div class="row">
             <div class="col-md-12 my-5">
                 <h1>{% if app.request.get('_route') == 'update_timer' %}
-                    Modifier le{% else %}Créer un
-                    {% endif %}timer</h1>
+                    Modifier le timer
+                {% else %}
+                    Créer un timer
+                {% endif %}</h1>
+            </div>
+            <div class="col-xl-9 col-lg-10 col-md-11 col-12 mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('list_user_timers') }}">Vos Timers</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            {% if app.request.get('_route') == 'update_timer' %}
+                                Modifier le timer
+                            {% else %}
+                                Créer un timer
+                            {% endif %}
+
+                        </li>
+                    </ol>
+                </nav>
             </div>
             <div class="col-md-12">
 
