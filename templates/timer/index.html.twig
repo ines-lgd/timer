@@ -43,14 +43,15 @@
                 <td>{{ timer.user.pseudo }}</td>
                 <td>{{ timer.createdAt | date('d/m/y H:i') }}</td>
                 <td>
-                    {{ timer.getStatusToString }}
-                    {% if timer.getStatusToString == 'EN COURS' %}
-                        <span>🟠</span>
-                    {% elseif timer.getStatusToString == 'PRÊT' %}
-                        <span>🟢</span>
-                    {% else %}
-                        <span>🔴</span>
-                    {% endif %}
+                    <span class="badge  px-2 py-1
+                        {% if (timer.getStatusToString) is same as ("PRÊT") %}
+                            badge-success
+                        {% elseif (timer.getStatusToString) is same as ("EN COURS") %}
+                            badge-warning
+                        {% else %}
+                            badge-danger
+                        {% endif %}
+                    ">{{ timer.getStatusToString }}</span>
                 </td>
                 <td>
                     <a class="btn-secondary btn-sm ml-1" href="{{ path('update_timer', {id: timer.id}) }}">
